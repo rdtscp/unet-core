@@ -5,19 +5,20 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
- var bcrypt = require('bcrypt');
+ const bcrypt = require('bcrypt');
+ const crypto = require('crypto');
 
  //get messages.
- const get_success_msg       = 'Logged In';
- const get_failure_msg       = 'Invalid username or password.';
+ var get_success_msg       = 'Logged In';
+ var get_failure_msg       = 'Invalid username or password.';
 
  // create messages.
- const uname_regexp          = /^[a-zA-Z0-9_-]{3,26}$/
- const pword_regexp          = /^((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{8,50})$/
- const uname_invalid_msg     = 'Username must be between 3 and 26 characters long, and can only contain alphanumerical, \'-\' and \'_\'';
- const pword_invalid_msg     = 'Password must contain 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character.';
- const user_exists_msg       = 'User already exists with that username.';
- const user_created_msg      = 'Succesfully Created Account';
+ var uname_regexp          = /^[a-zA-Z0-9_-]{3,26}$/
+ var pword_regexp          = /^((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{8,50})$/
+ var uname_invalid_msg     = 'Username must be between 3 and 26 characters long, and can only contain alphanumerical, \'-\' and \'_\'';
+ var pword_invalid_msg     = 'Password must contain 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character.';
+ var user_exists_msg       = 'User already exists with that username.';
+ var user_created_msg      = 'Succesfully Created Account';
  
 
 module.exports = {
@@ -40,41 +41,46 @@ module.exports = {
      *
      */
     get: function (req, res) {
-        // Reset session.
-        req.session.user = null;
-
         // Parse POST for User params.
-        var uname = req.session.username;
-        var pword = req.session.password;
+        var uname  = req.param('username');
+        var pword  = req.param('password');
 
         // Look up User.
         User.findOne({
             username: uname
         }).exec((err, user) => {
             if (err) return res.json(return_error(err));
-            // Check Password matches database password.
-            bcrypt.compare(pword, user.password, (err, match) => {
-                if (err) return res.json(return_error(err));
-                if (match) {
-                    // Set session user.
-                    req.session.user = user;
-                    return res.json({
-                        err: false,
-                        warning: false,
-                        msg: get_success_msg,
-                        exists: true,
-                        user: user
-                    });
-                } else {
-                    return res.json({
-                        err: false,
-                        warning: true,
-                        msg: get_failure_msg,
-                        exists: null,
-                        user: null
-                    });
-                }
-            });
+            if (user) {
+                // Check Password matches database password.
+                bcrypt.compare(pword, user.password, (err, match) => {
+                    if (err) return res.json(return_error(err));
+                    if (match) {
+                        return res.json({
+                            err: false,
+                            warning: false,
+                            msg: get_success_msg,
+                            exists: true,
+                            user: user
+                        });
+                    } else {
+                        return res.json({
+                            err: false,
+                            warning: true,
+                            msg: get_failure_msg,
+                            exists: null,
+                            user: null
+                        });
+                    }
+                });
+            } else {
+                return res.json({
+                    err: false,
+                    warning: true,
+                    msg: get_failure_msg,
+                    exists: null,
+                    user: null
+                });
+            }
         });
     },
 
@@ -97,8 +103,8 @@ module.exports = {
      */
     create: function (req, res) {        
         // Parse POST for User params.
-        var uname = req.params.username;
-        var pword = req.params.password;
+        var uname  = req.param('username');
+        var pword  = req.param('password');
 
         // Check username is valid.
         if (uname.search(uname_regexp) == -1) {
