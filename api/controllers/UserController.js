@@ -1,7 +1,7 @@
 /**
  * UserController
  *
- * @description :: Server-side logic for managing Users
+ * @description :: Server-side logic for managing User creation, retrieval(Authentication), deletion, and updating.
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
@@ -151,6 +151,7 @@ module.exports = {
                     }).exec((err, user) => {
                         // Error; return error to client app.
                         if (err) return res.json(return_error(err));
+                        /* @TODO Initialise Account models, for example Profile/Upload Directory etc */
                         return res.json({
                             err: false,
                             warning: false,
