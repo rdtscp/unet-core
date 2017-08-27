@@ -31,8 +31,9 @@ module.exports = {
      * {
      *     err: [ true | false ],
      *     warning: [ true | false ],
-     *     msg: Error or Warning message; E.G. [ 'Incorrect username or password' ]
+     *     msg: Error or Warning message; E.G. [ 'Incorrect username or password' ],
      *     exists: [ true | false ],
+     *     token: Authentication token,
      *     user: {
      *         username: 'string',
      *         id: 'integer'
@@ -56,23 +57,27 @@ module.exports = {
                     if (err) return res.json(return_error(err));
                     if (match) {
                         // Generate an auth token.
-                        var authToken = 'foobar';
-                        // Create a new Device for this account to be authenticate to.
-                        Device.create({
-                            owner: user.id,
-                            ip: req.ip,
-                            user_agent: req.headers['user-agent'],
-                            token: authToken
-                        }).exec(function(err, newDevice) {
-                            // Update the User with this new device.
-                            User.find().populate('devices').exec((err, popdUsers) => {});
-                        });
-                        return res.json({
-                            err: false,
-                            warning: false,
-                            msg: get_success_msg,
-                            exists: true,
-                            user: user
+                        crypto.randomBytes(256, (err, buf) => {
+                            if (err) return res.json(return_error(err));
+                            // Create a new Device for this account to be authenticate to.
+                            Device.create({
+                                owner: user.id,
+                                ip: req.ip,
+                                user_agent: req.headers['user-agent'],
+                                token: buf.toString('hex')
+                            }).exec(function(err, newDevice) {
+                                // Update the User with this new device.
+                                User.find().populate('devices').exec((err, popdUsers) => {});
+                            });
+                            // Return User.
+                            return res.json({
+                                err: false,
+                                warning: false,
+                                msg: get_success_msg,
+                                exists: true,
+                                token: buf.toString('hex'),
+                                user: user
+                            });
                         });
                     } else {
                         return res.json({
@@ -80,6 +85,7 @@ module.exports = {
                             warning: true,
                             msg: get_failure_msg,
                             exists: null,
+                            token: null,
                             user: null
                         });
                     }
@@ -90,6 +96,7 @@ module.exports = {
                     warning: true,
                     msg: get_failure_msg,
                     exists: null,
+                    token: null,
                     user: null
                 });
             }
@@ -211,6 +218,7 @@ function return_error(err) {
         warning: false,
         msg: err,
         exists: null,
+        token: null,
         user: null
     }
 }
