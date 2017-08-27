@@ -8,7 +8,7 @@
 module.exports = {
 
   connection: 'unet',
-
+  identity: 'User',
   attributes: {
 
     username: {
@@ -21,6 +21,11 @@ module.exports = {
       type: 'string',
       required: true,
     },
+
+    devices: {
+      collection: 'Device',
+      via: 'owner'
+    }
 
   }
 };
