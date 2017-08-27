@@ -41,13 +41,17 @@ module.exports = {
     });
   },
 
-  afterDestroy: function(destroyedRecords, cb) {
-      // Destroy all dependent 
-      Device.destroy({owner: _.pluck(destroyedRecords, 'id')}).exec(cb);
-  },
   afterUpdate: function(updatedRecord, cb) {
       // Remove all authenticated devices. 
-      Device.destroy({owner: _.pluck(updatedRecord, 'id')}).exec(cb);
-  }
+      console.log(updatedRecord)
+      Device.destroy({owner: updatedRecord.id}).exec(cb);
+  },
+
+  afterDestroy: function(destroyedRecords, cb) {
+      // Destroy all dependent 
+      Device.destroy({owner: _.pluck(destroyedRecords, 'id')}).exec(cb);      
+  },
+
+  
 };
 
