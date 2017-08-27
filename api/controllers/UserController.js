@@ -27,8 +27,7 @@
 
 module.exports = {
 
-    /* 
-     * 'post /unet/user/get'
+    /* 'post /unet/user/get'
      * Retrieves a User Model if authenticated.
      * 
      * Returns json:
@@ -104,8 +103,7 @@ module.exports = {
         });
     },
 
-    /* 
-     * 'post /unet/user/create'
+    /* 'post /unet/user/create'
      * Check if a user exists under post param "username". If not, creates a new one.
      * 
      * Returns json:
@@ -181,8 +179,7 @@ module.exports = {
         });
     },
 
-    /* 
-     * 'post /unet/user/destroy'
+    /* 'post /unet/user/destroy'
      * Destroys a User model if requested is authenticated.
      * 
      * Returns json:
@@ -262,23 +259,19 @@ module.exports = {
                         user: null
                     });
                 } else {
-                    // Hash password.
-                    bcrypt.hash(newPassword, 10, (err, hash) => {
-                        if (err) return res.json(return_error(err));
-                        // Update desired User model with new data.
-                        User.update(
-                            {id: device.owner},
-                            {password: hash}
-                        ).exec((err) => {
-                            if (err) return return_error(err);
-                            else return res.json({
-                                err: false,
-                                warning: false,
-                                msg: account_updated_msg,
-                                exists: false,
-                                user: null
-                            }); 
-                        });
+                    // Update desired User model with new data.
+                    User.update(
+                        {id: device.owner},
+                        {password: hash}
+                    ).exec((err) => {
+                        if (err) return return_error(err);
+                        else return res.json({
+                            err: false,
+                            warning: false,
+                            msg: account_updated_msg,
+                            exists: false,
+                            user: null
+                        }); 
                     });
                 }
             } else {
@@ -296,12 +289,11 @@ module.exports = {
 	
 };
 
-/*
- * Will queue IO operations involved with deleting a User.
+/* @TODO : Will queue IO operations involved with deleting a User.
  *  E.G. Deleting files.
  */
 function deleteUser(userID) {
-
+    // @TODO
 }
 
 // Returns json error format.
