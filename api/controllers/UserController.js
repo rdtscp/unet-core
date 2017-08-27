@@ -8,7 +8,7 @@
  const bcrypt = require('bcrypt');
  const crypto = require('crypto');
 
- //get messages.
+ // get messages.
  var get_success_msg       = 'Logged In';
  var get_failure_msg       = 'Invalid username or password.';
 
@@ -19,6 +19,9 @@
  var pword_invalid_msg     = 'Password must contain 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character.';
  var user_exists_msg       = 'User already exists with that username.';
  var user_created_msg      = 'Succesfully Created Account';
+
+ // Destroy/Update messages.
+ var device_unauth_msg     = 'This device is not authorised to perform that action.';
  
 
 module.exports = {
@@ -120,7 +123,7 @@ module.exports = {
      * }
      *
      */
-    create: function (req, res) {        
+    create: function (req, res) {
         // Parse POST for User params.
         var uname  = req.param('username');
         var pword  = req.param('password');
@@ -203,7 +206,38 @@ module.exports = {
      *
      */
     destroy: function (req, res) {
-
+        // Parse POST for User params.
+        var authToken = req.param('token');
+        // Check and see if a Device with this AuthToken exists.
+        Device.findOne({
+            token: authToken
+        }).exec((err, device) => {
+            if (err) return res.json(return_error(err));
+            if (device) {
+                // Remove the User model from the table. User model will delete its dependent children.
+                User.destroy({
+                    id: device.owner
+                }).exec((err) => {
+                    if (err) return return_error(err);
+                    else return res.json({
+                        err: false,
+                        warning: false,
+                        msg: 'Account Deleted.',
+                        exists: false,
+                        user: null
+                    });
+                });
+            } else {
+                return res.json({
+                    err: false,
+                    warning: true,
+                    msg: device_unauth_msg,
+                    exists: null,
+                    token: null,
+                    user: null
+                });
+            }
+        });
     },
 
     update: function (req, res) {
@@ -211,6 +245,14 @@ module.exports = {
     }
 	
 };
+
+/*
+ * Will queue IO operations involved with deleting a User.
+ *  
+ */
+function deleteUser(userID) {
+
+}
 
 function return_error(err) {
     return {
