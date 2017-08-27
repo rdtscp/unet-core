@@ -55,6 +55,18 @@ module.exports = {
                 bcrypt.compare(pword, user.password, (err, match) => {
                     if (err) return res.json(return_error(err));
                     if (match) {
+                        // Generate an auth token.
+                        var authToken = 'foobar';
+                        // Create a new Device for this account to be authenticate to.
+                        Device.create({
+                            owner: user.id,
+                            ip: req.ip,
+                            user_agent: req.headers['user-agent'],
+                            token: authToken
+                        }).exec(function(err, newDevice) {
+                            // Update the User with this new device.
+                            User.find().populate('devices').exec((err, popdUsers) => {});
+                        });
                         return res.json({
                             err: false,
                             warning: false,
