@@ -22,7 +22,7 @@ module.exports = {
             type: 'string'
         },
         token: {
-            type: 'string',
+            type: 'longtext',
             required: true
         }
     
