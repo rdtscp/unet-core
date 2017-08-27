@@ -5,8 +5,8 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
- const bcrypt = require('bcrypt');
  const crypto = require('crypto');
+ const bcrypt = require('bcrypt');
 
  // get messages.
  var get_success_msg       = 'Logged In';
@@ -22,6 +22,7 @@
 
  // Destroy/Update messages.
  var device_unauth_msg     = 'This device is not authorised to perform that action.';
+ var account_updated_msg   = 'Account succesfully updated. If you changed your password, you will need to re-login on your devices.';
  
 
 module.exports = {
@@ -34,13 +35,10 @@ module.exports = {
      * {
      *     err: [ true | false ],
      *     warning: [ true | false ],
-     *     msg: Error or Warning message; E.G. [ 'Incorrect username or password' ],
+     *     msg: Error, Warning or Success message; E.G. [ 'Incorrect username or password' ],
      *     exists: [ true | false ],
      *     token: Authentication token,
-     *     user: {
-     *         username: 'string',
-     *         id: 'integer'
-     *     }
+     *     user: User.js model
      * }
      *
      */
@@ -114,12 +112,9 @@ module.exports = {
      * {
      *     err: [ true | false ],
      *     warning: [ true | false ],
-     *     msg: Error or Warning message; E.G. [ 'User already exists' | 'Password must contain 1 uppercase' ]
+     *     msg: Error, Warning or Success message; E.G. [ 'User already exists' | 'Password must contain 1 uppercase' ]
      *     exists: [ true | false ],
-     *     user: {
-     *         username: 'string',
-     *         id: 'integer'
-     *     }
+     *     user: User.js model
      * }
      *
      */
@@ -166,22 +161,20 @@ module.exports = {
                     user: null
                 });
             } else {
-                bcrypt.hash(pword, 10, (err, hash) => {
-                    User.create({
-                        username: uname,
-                        password: hash
-                    }).exec((err, user) => {
-                        // Error; return error to client app.
-                        if (err) return res.json(return_error(err));
-                        /* @TODO Initialise Account models, for example Profile/Upload Directory etc */
-                        return res.json({
-                            err: false,
-                            warning: false,
-                            msg: user_created_msg,
-                            exists: false,
-                            username: user.username,
-                            id: user.id
-                        });
+                User.create({
+                    username: uname,
+                    password: pword
+                }).exec((err, user) => {
+                    // Error; return error to client app.
+                    if (err) return res.json(return_error(err));
+                    /* @TODO Initialise Account models, for example Profile/Upload Directory etc */
+                    return res.json({
+                        err: false,
+                        warning: false,
+                        msg: user_created_msg,
+                        exists: false,
+                        username: user.username,
+                        id: user.id
                     });
                 });
             }
@@ -196,12 +189,9 @@ module.exports = {
      * {
      *     err: [ true | false ],
      *     warning: [ true | false ],
-     *     msg: Error or Warning message; E.G. [ 'User already exists' | 'Password must contain 1 uppercase' ]
+     *     msg: Error, Warning or Success message; E.G. [ 'Account Deleted.' ],
      *     exists: [ true | false ],
-     *     user: {
-     *         username: 'string',
-     *         id: 'integer'
-     *     }
+     *     user: User.js model
      * }
      *
      */
@@ -240,20 +230,81 @@ module.exports = {
         });
     },
 
+    /* 'post /unet/user/update'
+     * Updates info on a User model if request is authenticated.
+     * 
+     * Returns json:
+     * {
+     *     err: [ true | false ],
+     *     warning: [ true | false ],
+     *     msg: Error, Warning or Success message; E.G. [ 'Account Updated', 'Invalid new Password' ],
+     *     exists: [ true | false ],
+     *     user: User.js model
+     * }
+     */
     update: function (req, res) {
-
+        // Parse POST for User params.
+        var authToken   = req.param('token');
+        var newPassword = req.param('password');
+        // Check the request is authenticted.
+        Device.findOne({
+            token: authToken
+        }).exec((err, device) => {
+            if (err) return res.json(return_error(err));
+            if (device) {
+                // Check new password is valid.
+                if (newPassword.search(pword_regexp) == -1) {
+                    return res.json({
+                        err: false,
+                        warning: true,
+                        msg: pword_invalid_msg,
+                        exists: null,
+                        user: null
+                    });
+                } else {
+                    // Hash password.
+                    bcrypt.hash(newPassword, 10, (err, hash) => {
+                        if (err) return res.json(return_error(err));
+                        // Update desired User model with new data.
+                        User.update(
+                            {id: device.owner},
+                            {password: hash}
+                        ).exec((err) => {
+                            if (err) return return_error(err);
+                            else return res.json({
+                                err: false,
+                                warning: false,
+                                msg: account_updated_msg,
+                                exists: false,
+                                user: null
+                            }); 
+                        });
+                    });
+                }
+            } else {
+                return res.json({
+                    err: false,
+                    warning: true,
+                    msg: device_unauth_msg,
+                    exists: null,
+                    token: null,
+                    user: null
+                });
+            }
+        });
     }
 	
 };
 
 /*
  * Will queue IO operations involved with deleting a User.
- *  
+ *  E.G. Deleting files.
  */
 function deleteUser(userID) {
 
 }
 
+// Returns json error format.
 function return_error(err) {
     return {
         err: true,
