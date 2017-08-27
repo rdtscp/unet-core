@@ -27,6 +27,10 @@ module.exports = {
       via: 'owner'
     }
 
+  },
+  afterDestroy: function(destroyedRecords, cb) {
+      // Destroy all dependent 
+      Device.destroy({owner: _.pluck(destroyedRecords, 'id')}).exec(cb);
   }
 };
 
