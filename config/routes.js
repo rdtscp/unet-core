@@ -64,4 +64,14 @@ module.exports.routes = {
     action: 'update'
   },
 
+  'post /unet/friendship/create': {
+    controller: 'FriendshipController',
+    action: 'create'
+  },
+
+  'post /unet/friendship/get': {
+    controller: 'FriendshipController',
+    action: 'get'
+  },
+
 };
