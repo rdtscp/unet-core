@@ -27,7 +27,7 @@ module.exports = {
     devices: {
       collection: 'Device',
       via: 'owner'
-    }
+    },
 
   },
 
@@ -39,20 +39,6 @@ module.exports = {
       values.password = hash;
       cb();
     });
-  },
-
-  // Called before updating a User model, if the password is being updated, it will be hashed; returns error if hashing fails.
-  beforeUpdate: function(valuesToUpdate, cb) {
-      if (valuesToUpdate.password) {
-        // Hash password
-        bcrypt.hash(valuesToUpdate.password, 10, function(err, hash) {
-          if(err) return cb(err);
-          valuesToUpdate.password = hash;
-          cb();
-        });
-      } else {
-        cb();
-      }
   },
 
   afterUpdate: function(updatedRecord, cb) {

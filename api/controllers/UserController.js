@@ -21,9 +21,10 @@
  var user_created_msg      = 'Succesfully Created Account';
 
  // Destroy/Update messages.
- var device_unauth_msg     = 'This device is not authorised to perform that action.';
  var account_updated_msg   = 'Account succesfully updated. If you changed your password, you will need to re-login on your devices.';
  
+ // Auth messages.
+ var device_unauth_msg     = 'This device is not authorised to perform that action.';
 
 module.exports = {
 
@@ -154,7 +155,7 @@ module.exports = {
                 return res.json({
                     err: false,
                     warning: true,
-                    msg: user_exists_message,
+                    msg: user_exists_msg,
                     exists: true,
                     user: null
                 });
@@ -259,19 +260,23 @@ module.exports = {
                         user: null
                     });
                 } else {
-                    // Update desired User model with new data.
-                    User.update(
-                        {id: device.owner},
-                        {password: hash}
-                    ).exec((err) => {
-                        if (err) return return_error(err);
-                        else return res.json({
-                            err: false,
-                            warning: false,
-                            msg: account_updated_msg,
-                            exists: false,
-                            user: null
-                        }); 
+                    // Hash the password.
+                    bcrypt.hash(valuesToUpdate.password, 10, function(err, hash) {
+                        if(err) return res.json(return_error(err));
+                        // Update desired User model with new data.
+                        User.update(
+                            {id: device.owner},
+                            {password: hash}
+                        ).exec((err) => {
+                            if (err) return return_error(err);
+                            else return res.json({
+                                err: false,
+                                warning: false,
+                                msg: account_updated_msg,
+                                exists: false,
+                                user: null
+                            }); 
+                        });
                     });
                 }
             } else {
