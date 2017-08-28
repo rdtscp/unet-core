@@ -40,15 +40,20 @@ module.exports = {
       cb();
     });
   },
-
+  
+  // After a User's credentials have been updated, de-auth all their devices.
   afterUpdate: function(updatedRecord, cb) {
       // Remove all authenticated devices.
       Device.destroy({owner: updatedRecord.id}).exec(cb);
   },
 
+  // Events to trigger when a User is destroyed.
   afterDestroy: function(destroyedRecords, cb) {
+      var userID = _.pluck(destroyedRecords, 'id');
       // Destroy all dependent 
-      Device.destroy({owner: _.pluck(destroyedRecords, 'id')}).exec(cb);      
+      Device.destroy({owner: userID}).exec(cb);
+      Friendship.destroy({receiver: userID, confirmed: false}).exec(cb);
+      Friendship.destroy({sender: userID, confirmed: false}).exec(cb);
   },
 
   
