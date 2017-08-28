@@ -74,4 +74,9 @@ module.exports.routes = {
     action: 'get'
   },
 
+  'post /unet/friendship/destroy': {
+    controller: 'FriendshipController',
+    action: 'destroy'
+  },
+
 };

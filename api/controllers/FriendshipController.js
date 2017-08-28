@@ -12,10 +12,13 @@
  var user_exist_msg        = 'Requested user does not exist';
  var sent_request_msg      = 'Friend request sent';
 
+ // Destroy messages.
+ var friend_removed_msg    = 'Succesfully removed Friend';
+
 module.exports = {
 
     /* 'post /unet/friendship/get'
-     * Returns a list of friendships relavent to the requester.
+     * Returns a list of friendships related to the requester.
      * 
      * Returns json:
      * {
@@ -76,6 +79,7 @@ module.exports = {
                             sender: sender.id,
                             receiver: receiver.id
                         }).exec((err, newFriendship) => {
+                            if (err) return res.json(return_error(err));
                             return res.json({
                                 err: false,
                                 warning: false,
@@ -103,12 +107,69 @@ module.exports = {
         });
     },
 
+    /* 'post /unet/friendship/destroy'
+     * Destroys a Friendship model between two Users.
+     * 
+     * Returns json:
+     * {
+     *     err: [ true | false ],
+     *     warning: [ true | false ],
+     *     msg: Error, Warning or Success message; E.G. [ 'Failed to remove friend' | 'Succesfully removed friend' ],
+     *     friendship: Friendship destroyed.
+     * }
+     * 
+     */
     destroy: function (req, res) {
-
+        // Parse POST for User params.
+        var authToken     = req.param('token');
+        var requestedUser = req.param('username');
+        // Check if current request is authenticated.
+        Device.findOne({
+            token: authToken
+        }).exec((err, device) => {
+            if (err) return res.json(return_error(err));
+            if (device) {
+                // Get Users if they exist.
+                Friendship.getUsers({id: device.owner}, {username: requestedUser}, (err, sender, receiver) => {
+                    if (err) return res.json(return_error(err));
+                    if (sender && receiver) {
+                        // Destroy Friendship.
+                        Friendship.destroy({
+                            or: [
+                                {sender: sender.id, receiver: receiver.id},
+                                {sender: receiver.id, receiver: sender.id}
+                            ]
+                        }).exec((err, destroyedFriendship) => {
+                            if (err) return res.json(return_error(err));
+                            return res.json({
+                                err: false,
+                                warning: false,
+                                msg: friend_removed_msg,
+                                friendship: destroyedFriendship
+                            });
+                        });
+                    } else {
+                        return res.json({
+                            err: false,
+                            warning: true,
+                            msg: device_unauth_msg,
+                            friendship: null
+                        });
+                    }
+                });
+            } else {
+                return res.json({
+                    err: false,
+                    warning: true,
+                    msg: device_unauth_msg,
+                    friendship: null
+                });
+            }
+        });
     },
     
     update: function (req, res) {
-
+        // Not implemented.
     }
 	
 };
