@@ -12,7 +12,7 @@ module.exports = {
       attributes: {
     
         owner: {
-            model: 'user'
+            model: 'User'
         },
         ip: {
             type: 'string',
