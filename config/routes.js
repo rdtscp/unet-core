@@ -44,6 +44,11 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
+  'post /unet/device/get': {
+    controller: 'DeviceController',
+    action: 'get'
+  },
+
   'post /unet/user/get': {
     controller: 'UserController',
     action: 'get'
