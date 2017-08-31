@@ -48,7 +48,7 @@
 *                                                                           *
 ****************************************************************************/
 
-// module.exports.csrf = true;
+module.exports.csrf = true;
 
 /****************************************************************************
 *                                                                           *
@@ -58,7 +58,7 @@
 *                                                                           *
 ****************************************************************************/
 
-// module.exports.csrf = {
-//    grantTokenViaAjax: true,
-//    origin: 'http://client.localhost:3000'
-// }
+module.exports.csrf = {
+   grantTokenViaAjax: true,
+   origin: 'http://client.localhost:3000'
+}
