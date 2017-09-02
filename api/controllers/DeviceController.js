@@ -14,6 +14,7 @@ module.exports = {
         Device.findOne({
             token: authToken
         }).exec((err, device) => {
+            if (err) return res.json(Utils.return_error(err));
             if (device) {
                 return res.json({tokenValid: true});
             } else {
