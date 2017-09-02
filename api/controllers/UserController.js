@@ -67,17 +67,21 @@ module.exports = {
                                 user_agent: req.headers['user-agent'],
                                 token: buf.toString('hex')
                             }).exec(function(err, newDevice) {
-                                // Update the User with this new device.
-                                User.find().populate('devices').exec((err, popdUsers) => {});
-                            });
-                            // Return User.
-                            return res.json({
-                                err: false,
-                                warning: false,
-                                msg: get_success_msg,
-                                exists: true,
-                                token: buf.toString('hex'),
-                                user: user
+                                if (err) return res.json(Utils.return_error(err));
+                                if (newDevice) {
+                                    // Return User.
+                                    return res.json({
+                                        err: false,
+                                        warning: false,
+                                        msg: get_success_msg,
+                                        exists: true,
+                                        token: buf.toString('hex'),
+                                        user: user
+                                    });
+                                } else {
+                                    // Return User.
+                                    return res.serverError('Error creating a device.');
+                                }
                             });
                         });
                     } else {
