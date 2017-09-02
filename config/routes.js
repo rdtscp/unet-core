@@ -49,6 +49,8 @@ module.exports.routes = {
     action: 'get'
   },
 
+  // User Controller
+
   'post /unet/user/get': {
     controller: 'UserController',
     action: 'get'
@@ -69,6 +71,13 @@ module.exports.routes = {
     action: 'update'
   },
 
+  // FriendshipController
+
+  'post /unet/friendship/get/all': {
+    controller: 'FriendshipController',
+    action: 'getall'
+  },
+
   'post /unet/friendship/create': {
     controller: 'FriendshipController',
     action: 'create'
@@ -81,6 +90,28 @@ module.exports.routes = {
 
   'post /unet/friendship/destroy': {
     controller: 'FriendshipController',
+    action: 'destroy'
+  },
+
+  // Chat Controller
+
+  'post /unet/chat/get/all': {
+    controller: 'ChatController',
+    action: 'getall'
+  },
+
+  'post /unet/chat/create': {
+    controller: 'ChatController',
+    action: 'create'
+  },
+
+  'post /unet/chat/get': {
+    controller: 'ChatController',
+    action: 'get'
+  },
+
+  'post /unet/chat/update': {
+    controller: 'ChatController',
     action: 'destroy'
   },
 
