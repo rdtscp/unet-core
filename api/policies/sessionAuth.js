@@ -9,13 +9,20 @@
  */
 module.exports = function(req, res, next) {
 
-  // User is allowed, proceed to the next policy, 
-  // or if this is the last policy, the controller
-  if (req.session.authenticated) {
-    return next();
-  }
+  // Parse POST for User params.
+  var authToken   = req.param('token');
+  // Check the request is authenticted.
+  Device.findOne({
+      token: authToken
+  }).exec((err, device) => {
+    if (err) return res.serverError(err);
+    // If the device exists and is authenticated, append the Users id to the req.options.userid var.
+    if (device) {
+      req.options.userid = device.owner;
+      return next();
+    } else {
+      return res.forbidden('You are not permitted to perform this action.');
+    }
+  });
 
-  // User is not allowed
-  // (default res.forbidden() behavior can be overridden in `config/403.js`)
-  return res.forbidden('You are not permitted to perform this action.');
 };
