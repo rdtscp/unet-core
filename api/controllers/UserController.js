@@ -51,15 +51,15 @@ module.exports = {
         User.findOne({
             username: uname
         }).exec((err, user) => {
-            if (err) return res.json(return_error(err));
+            if (err) return res.json(Utils.return_error(err));
             if (user) {
                 // Check Password matches database password.
                 bcrypt.compare(pword, user.password, (err, match) => {
-                    if (err) return res.json(return_error(err));
+                    if (err) return res.json(Utils.return_error(err));
                     if (match) {
                         // Generate an auth token.
                         crypto.randomBytes(256, (err, buf) => {
-                            if (err) return res.json(return_error(err));
+                            if (err) return res.json(Utils.return_error(err));
                             // Create a new Device for this account to be authenticate to.
                             Device.create({
                                 owner: user.id,
@@ -149,7 +149,7 @@ module.exports = {
             username: uname
         }).exec((err, user) => {
             // Error; return error to client app.
-            if (err) return res.json(return_error(err));
+            if (err) return res.json(Utils.return_error(err));
             // If the user exists.
             if (user) {
                 return res.json({
@@ -165,7 +165,7 @@ module.exports = {
                     password: pword
                 }).exec((err, user) => {
                     // Error; return error to client app.
-                    if (err) return res.json(return_error(err));
+                    if (err) return res.json(Utils.return_error(err));
                     /* @TODO Initialise Account models, for example Profile/Upload Directory etc */
                     return res.json({
                         err: false,
@@ -200,13 +200,13 @@ module.exports = {
         Device.findOne({
             token: authToken
         }).exec((err, device) => {
-            if (err) return res.json(return_error(err));
+            if (err) return res.json(Utils.return_error(err));
             if (device) {
                 // Remove the User model from the table. User model will delete its dependent children.
                 User.destroy({
                     id: device.owner
                 }).exec((err) => {
-                    if (err) return return_error(err);
+                    if (err) return res.json(Utils.return_error(err));
                     else return res.json({
                         err: false,
                         warning: false,
@@ -248,7 +248,7 @@ module.exports = {
         Device.findOne({
             token: authToken
         }).exec((err, device) => {
-            if (err) return res.json(return_error(err));
+            if (err) return res.json(Utils.return_error(err));
             if (device) {
                 // Check new password is valid.
                 if (newPassword.search(pword_regexp) == -1) {
@@ -262,13 +262,13 @@ module.exports = {
                 } else {
                     // Hash the password.
                     bcrypt.hash(valuesToUpdate.password, 10, function(err, hash) {
-                        if(err) return res.json(return_error(err));
+                        if(err) return res.json(Utils.return_error(err));
                         // Update desired User model with new data.
                         User.update(
                             {id: device.owner},
                             {password: hash}
                         ).exec((err) => {
-                            if (err) return return_error(err);
+                            if (err) return res.json(Utils.return_error(err));
                             else return res.json({
                                 err: false,
                                 warning: false,
@@ -299,16 +299,4 @@ module.exports = {
  */
 function deleteUser(userID) {
     // @TODO
-}
-
-// Returns json error format.
-function return_error(err) {
-    return {
-        err: true,
-        warning: false,
-        msg: err,
-        exists: null,
-        token: null,
-        user: null
-    }
 }
