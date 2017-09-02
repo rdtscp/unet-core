@@ -42,7 +42,7 @@ module.exports = {
                 warning: false,
                 message: null,
                 friendships: friendships
-            })
+            });
         });
     },
 
@@ -60,7 +60,7 @@ module.exports = {
     get: function (req, res) {
         var friendshipID  = req.param('id');
         Friendship.findOne({
-            id: id
+            id: friendshipID
         }).exec((err, friendship) => {
             if (err) return res.json(Utils.return_error(err));
             return res.json({
