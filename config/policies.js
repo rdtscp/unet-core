@@ -52,5 +52,14 @@ module.exports.policies = {
   UserController: {
     update: 'sessionAuth',
     destroy: 'sessionAuth'
+  },
+
+  FriendshipController: {
+    getall: 'sessionAuth',
+    get: 'sessionAuth',
+    create: 'sessionAuth',
+    destroy: 'sessionAuth',
+    update: 'sessionAuth'
   }
+
 };
