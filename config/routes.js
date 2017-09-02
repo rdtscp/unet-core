@@ -93,6 +93,11 @@ module.exports.routes = {
     action: 'destroy'
   },
 
+  'post /unet/friendship/update': {
+    controller: 'FriendshipController',
+    action: 'update'
+  },
+
   // Chat Controller
 
   'post /unet/chat/get/all': {
@@ -114,5 +119,12 @@ module.exports.routes = {
     controller: 'ChatController',
     action: 'destroy'
   },
+
+  // Message Controller
+
+  'post /unet/message/create': {
+    controller: 'MessageController',
+    action: 'create'
+  }
 
 };
