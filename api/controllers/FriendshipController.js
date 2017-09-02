@@ -17,7 +17,7 @@
 
 module.exports = {
 
-    /* 'post /unet/friendship/get'
+    /* 'post /unet/friendship/get/all'
      * Returns a list of friendships related to the requester.
      * 
      * Returns json:
@@ -33,17 +33,52 @@ module.exports = {
         Device.findOne({
             token: authToken
         }).exec((err, device) => {
-            Friendship.find({
-                or: [
-                    {receiver: device.owner},
-                    {sender: device.owner, confirmed: true}
-                ]
-            }).exec((err, friendships) => {
+            if (err) return res.json(Utils.return_error(err));
+            if (device) {
+                Friendship.find({
+                    or: [
+                        {receiver: device.owner},
+                        {sender: device.owner, confirmed: true}
+                    ]
+                }).exec((err, friendships) => {
+                    if (err) return res.json(Utils.return_error(err));
+                    return res.json({
+                        err: false,
+                        warning: false,
+                        message: null,
+                        friendships: friendships
+                    })
+                });
+            }
+        });
+    },
+
+    /* 'post /unet/friendship/get'
+     * Returns a friendship.
+     * 
+     * Returns json:
+     * {
+     *     err: [ true | false ],
+     *     warning: [ true | false ],
+     *     msg: Error, Warning or Success message; E.G. [ 'Failed to retrieve Friendship' ],
+     *     friendship: Friendship.js model
+     * }
+     */
+    get: function (req, res) {
+        var authToken     = req.param('token');
+        var friendshipID  = req.param('id');
+        Device.findOne({
+            token: authToken
+        }).exec((err, device) => {
+            Friendship.findOne({
+                id: id
+            }).exec((err, friendship) => {
+                if (err) return res.json(Utils.return_error(err));
                 return res.json({
                     err: false,
                     warning: false,
                     message: null,
-                    friendships: friendships
+                    friendship: friendship
                 })
             });
         });
