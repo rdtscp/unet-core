@@ -26,7 +26,16 @@ module.exports = {
             required: true
         }
     
+      },
+
+      afterCreate: function (newDevice, cb) {
+          // Update the User with this new device.
+          User.find().populate('devices').exec((err, popdUsers) => {
+              if (err) cb(err);
+              else cb();
+          });
       }
+
     };
     
     
