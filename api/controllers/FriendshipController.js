@@ -68,18 +68,18 @@ module.exports = {
         Device.findOne({
             token: authToken
         }).exec((err, device) => {
-            if (err) return res.json(return_error(err));
+            if (err) return res.json(Utils.return_error(err));
             if (device) {
                 // Check Users required for this Friendship exist.
                 Friendship.getUsers({id: device.owner}, {username: requestedUser}, (err, sender, receiver) => {
-                    if (err) return res.json(return_error(err));
+                    if (err) return res.json(Utils.return_error(err));
                     if (sender && receiver) {
                         // Create new Friendship.
                         Friendship.create({
                             sender: sender.id,
                             receiver: receiver.id
                         }).exec((err, newFriendship) => {
-                            if (err) return res.json(return_error(err));
+                            if (err) return res.json(Utils.return_error(err));
                             return res.json({
                                 err: false,
                                 warning: false,
@@ -127,11 +127,11 @@ module.exports = {
         Device.findOne({
             token: authToken
         }).exec((err, device) => {
-            if (err) return res.json(return_error(err));
+            if (err) return res.json(Utils.return_error(err));
             if (device) {
                 // Check Users required for this Friendship exist.
                 Friendship.getUsers({id: device.owner}, {username: requestedUser}, (err, sender, receiver) => {
-                    if (err) return res.json(return_error(err));
+                    if (err) return res.json(Utils.return_error(err));
                     if (sender && receiver) {
                         // Destroy Friendship.
                         Friendship.destroy({
@@ -140,7 +140,7 @@ module.exports = {
                                 {sender: receiver.id, receiver: sender.id}
                             ]
                         }).exec((err, destroyedFriendship) => {
-                            if (err) return res.json(return_error(err));
+                            if (err) return res.json(Utils.return_error(err));
                             return res.json({
                                 err: false,
                                 warning: false,
@@ -173,13 +173,3 @@ module.exports = {
     }
 	
 };
-
-// Returns json error format.
-function return_error(err) {
-    return {
-        err: true,
-        warning: false,
-        msg: err,
-        friendship: null
-    }
-}

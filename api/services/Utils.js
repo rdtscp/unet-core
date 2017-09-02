@@ -21,6 +21,14 @@ module.exports = {
         } 
         
         return (mm + '/' + dd + '/' + yyyy);
+    },
+
+    return_error: function (err) {
+        return {
+            err: true,
+            warning: false,
+            msg: err
+        }
     }
 
 }
