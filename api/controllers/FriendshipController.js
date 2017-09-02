@@ -88,7 +88,7 @@ module.exports = {
         var requestedUser = req.param('username');
         var userID        = req.options.userid;
         // Check Users required for this Friendship exist.
-        Friendship.getUsers({id: userID}, {username: requestedUser}, (err, sender, receiver) => {
+        User.getUsers({id: userID}, {username: requestedUser}, (err, sender, receiver) => {
             if (err) return res.json(Utils.return_error(err));
             if (sender && receiver) {
                 // Create new Friendship.
@@ -132,7 +132,7 @@ module.exports = {
         var requestedUser = req.param('username');
         var userID        = req.options.userid;
         // Check Users required for this Friendship exist.
-        Friendship.getUsers({id: userID}, {username: requestedUser}, (err, sender, receiver) => {
+        User.getUsers({id: userID}, {username: requestedUser}, (err, sender, receiver) => {
             if (err) return res.json(Utils.return_error(err));
             if (sender && receiver) {
                 // Destroy Friendship.
