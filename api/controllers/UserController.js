@@ -196,35 +196,19 @@ module.exports = {
     destroy: function (req, res) {
         // Parse POST for User params.
         var authToken = req.param('token');
-        // Check and see if a Device with this AuthToken exists.
-        Device.findOne({
-            token: authToken
-        }).exec((err, device) => {
+        var userID    = req.options.userid;
+        // Remove the User model from the table. User model will delete its dependent children.
+        User.destroy({
+            id: userID
+        }).exec((err) => {
             if (err) return res.json(Utils.return_error(err));
-            if (device) {
-                // Remove the User model from the table. User model will delete its dependent children.
-                User.destroy({
-                    id: device.owner
-                }).exec((err) => {
-                    if (err) return res.json(Utils.return_error(err));
-                    else return res.json({
-                        err: false,
-                        warning: false,
-                        msg: 'Account Deleted.',
-                        exists: false,
-                        user: null
-                    });
-                });
-            } else {
-                return res.json({
-                    err: false,
-                    warning: true,
-                    msg: device_unauth_msg,
-                    exists: null,
-                    token: null,
-                    user: null
-                });
-            }
+            else return res.json({
+                err: false,
+                warning: false,
+                msg: 'Account Deleted.',
+                exists: false,
+                user: null
+            });
         });
     },
 
