@@ -32,7 +32,7 @@ module.exports = {
                 err: false,
                 warning: false,
                 message: null,
-                friendships: chats
+                chats: chats
             })
         });
     },
@@ -54,12 +54,18 @@ module.exports = {
             id: chatID
         }).exec((err, chat) => {
             if (err) return res.json(Utils.return_error(err));
-            return res.json({
-                err: false,
-                warning: false,
-                message: null,
-                chat: chat
-            })
+            else {
+                Chat.retrieveMessages(chat.id, chat.num_msgs, (err, messages) => {
+                    if (err) return res.json(Utils.return_error(err));
+                    return res.json({
+                        err: false,
+                        warning: false,
+                        message: null,
+                        chat: chat,
+                        messages: messages
+                    });
+                });
+            }
         });
     },
 
@@ -83,10 +89,11 @@ module.exports = {
             username: requestedUser
         }).exec((err, friend) => {
             if (err) return res.json(Utils.return_error(err));
-            // If the friendship exists.
+            // If the request User exists.
             if (friend) {
                 Friendship.friendshipExists(userID, friend.id, (err, friendship) => {
                     if (err) return res.json(Utils.return_error(err));
+                    // If the friendship exists.
                     if (friendship) {
                         Chat.create({
                             user_one: userID,

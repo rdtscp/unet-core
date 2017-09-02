@@ -67,6 +67,17 @@ module.exports = {
       }
   
     },
+
+    // Retrieves the next 10 messages starting from message# startingNum in chat chatID.
+    retrieveMessages(chatID, startingNum, cb) {
+      Message.find({
+        chat: chatID,
+        message_num: { '<=': startingNum, '>': (startingNum - 10)}
+      }).exec((err, messages) =>  {
+        if (err) cb(err, null);
+        cb(null, messages);
+     });
+    }
   
   };
   
