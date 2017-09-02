@@ -29,7 +29,6 @@ module.exports = {
      * }
      */
     getall: function (req, res) {
-        var authToken     = req.param('token');
         var userID        = req.options.userid;
         Friendship.find({
             or: [
@@ -59,7 +58,6 @@ module.exports = {
      * }
      */
     get: function (req, res) {
-        var authToken     = req.param('token');
         var friendshipID  = req.param('id');
         Friendship.findOne({
             id: id
@@ -87,7 +85,6 @@ module.exports = {
      */
     create: function (req, res) {
         // Parse POST for User params.
-        var authToken     = req.param('token');
         var requestedUser = req.param('username');
         var userID        = req.options.userid;
         // Check Users required for this Friendship exist.
@@ -132,7 +129,6 @@ module.exports = {
      */
     destroy: function (req, res) {
         // Parse POST for User params.
-        var authToken     = req.param('token');
         var requestedUser = req.param('username');
         var userID        = req.options.userid;
         // Check Users required for this Friendship exist.
