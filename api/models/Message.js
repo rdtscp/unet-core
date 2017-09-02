@@ -27,6 +27,11 @@ module.exports = {
       type: 'integer',
     },
 
+    sender: {
+      type: 'string',
+      required: true
+    }
+
   },
 
   // Called before a Message model is created, will 
@@ -45,9 +50,10 @@ module.exports = {
   },
 
   afterCreate: function (newlyInsertedRecord, cb) {
+    var msg = newlyInsertedRecord.message.substring(0,26);
     Chat.update(
       {id: newlyInsertedRecord.chat},
-      {num_msgs: newlyInsertedRecord.message_num}
+      {num_msgs: newlyInsertedRecord.message_num, last_msg: msg, lastSender: newlyInsertedRecord.sender }
     ).exec((err, chat) => {
       if (err) cb(err);
       if (chat) {
