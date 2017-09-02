@@ -29,7 +29,7 @@ module.exports = {
      * }
      */
     getall: function (req, res) {
-        var userID        = req.options.userid;
+        var userID = req.options.userid;
         Friendship.find({
             or: [
                 {receiver: userID},
@@ -125,7 +125,6 @@ module.exports = {
      *     msg: Error, Warning or Success message; E.G. [ 'Failed to remove friend' | 'Succesfully removed friend' ],
      *     friendship: Friendship destroyed.
      * }
-     * 
      */
     destroy: function (req, res) {
         // Parse POST for User params.
@@ -161,8 +160,41 @@ module.exports = {
         });
     },
     
+    /* 'post /unet/friendship/update'
+     * Updates a Friendship model between two Users.
+     * 
+     * Returns json:
+     * {
+     *     err: [ true | false ],
+     *     warning: [ true | false ],
+     *     msg: Error, Warning or Success message; E.G. [ 'Friend request Accepted' ],
+     *     friendship: Friendship updated.
+     * }
+     */
     update: function (req, res) {
-        // Not implemented.
+        // Parse POST for params.
+        var requestID   = req.param('id');
+        var userID      = req.options.userid;
+        Friendship.update(
+            {id: requestID, receiver: userID, confirmed: false },
+            {confirmed: true}
+        ).exec((err, friendship) => {
+            if (err) return res.json(Utils.return_error(err));
+            if (friendship) {
+                return res.json({
+                    err: false,
+                    warning: false,
+                    msg: 'Friend request accepted.',
+                    friendship: friendship
+                });
+            } else {
+                return res.json({
+                    err: false,
+                    warning: true,
+                    msg: 'Friend request does not exist.'
+                });
+            }
+        });
     }
 	
 };
