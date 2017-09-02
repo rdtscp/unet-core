@@ -37,10 +37,12 @@ module.exports = {
         // Parse POST for params.
         var chatID  = req.param('id');
         var msg     = req.param('message');
+        msg          = msg.replace(/(<br>|&nbsp;| )*$/, '').replace(/^(<br>|&nbsp;| )*/, '');
         var userID  = req.options.userid;
         Message.create({
             chat: chatID,
-            message: msg
+            message: msg,
+            sender: userID
         }).exec((err, message) => {
             if (err) return res.json(Utils.return_error(err));
             if (message) {
