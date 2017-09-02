@@ -70,7 +70,7 @@ module.exports = {
         }).exec((err, device) => {
             if (err) return res.json(return_error(err));
             if (device) {
-                // Get Users if they exist.
+                // Check Users required for this Friendship exist.
                 Friendship.getUsers({id: device.owner}, {username: requestedUser}, (err, sender, receiver) => {
                     if (err) return res.json(return_error(err));
                     if (sender && receiver) {
@@ -129,7 +129,7 @@ module.exports = {
         }).exec((err, device) => {
             if (err) return res.json(return_error(err));
             if (device) {
-                // Get Users if they exist.
+                // Check Users required for this Friendship exist.
                 Friendship.getUsers({id: device.owner}, {username: requestedUser}, (err, sender, receiver) => {
                     if (err) return res.json(return_error(err));
                     if (sender && receiver) {
