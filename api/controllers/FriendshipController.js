@@ -28,7 +28,7 @@ module.exports = {
      *     friendships: [ Array of Friendship.js models ]
      * }
      */
-    get: function (req, res) {
+    getall: function (req, res) {
         var authToken     = req.param('token');
         Device.findOne({
             token: authToken
