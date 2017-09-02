@@ -56,6 +56,38 @@ module.exports = {
       Friendship.destroy({sender: userID, confirmed: false}).exec(cb);
   },
 
+  /*
+   * Method takes two users, and returns them (if they exist).
+   *  
+   * sender:   JSON representation of the User that sent a specific request.
+   * receiver: JSON representation of the User that has/is to receive the request
+   * 
+   */
+  getUsers: function(sender, receiver, cb) {
+    var tasks = [];
+    var out_sender;
+    var out_receiver;
+    tasks.push(
+        User.findOne(sender).then((user) => {
+            if (user) out_sender = user;
+            return;
+        })
+    );
+    tasks.push(
+      User.findOne(receiver).then((user) => {
+          if (user) out_receiver = user;
+          return;
+      })
+    );
+    return Promise
+    .all(tasks)
+    .then(result => {
+        if (out_sender && out_receiver) cb(null, out_sender, out_receiver);
+        else if (!out_receiver) cb('Requested user does not exist.', null, null);
+        else cb('Error: User that sent request could not be retrieved.', null, null);
+    });
+
+  },
   
 };
 
