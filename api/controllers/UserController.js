@@ -242,54 +242,38 @@ module.exports = {
      */
     update: function (req, res) {
         // Parse POST for User params.
-        var authToken   = req.param('token');
-        var newPassword = req.param('password');
-        // Check the request is authenticted.
-        Device.findOne({
-            token: authToken
-        }).exec((err, device) => {
-            if (err) return res.json(Utils.return_error(err));
-            if (device) {
-                // Check new password is valid.
-                if (newPassword.search(pword_regexp) == -1) {
-                    return res.json({
+        var valuesToUpdate      = {};
+        valuesToUpdate.password = req.param('password');
+        var userID              = req.options.userid;
+        // Check new password is valid.
+        if (valuesToUpdate.password.search(pword_regexp) == -1) {
+            return res.json({
+                err: false,
+                warning: true,
+                msg: pword_invalid_msg,
+                exists: null,
+                user: null
+            });
+        } else {
+            // Hash the password.
+            bcrypt.hash(valuesToUpdate.password, 10, function(err, hash) {
+                if(err) return res.json(Utils.return_error(err));
+                // Update desired User model with new data.
+                User.update(
+                    {id: userID},
+                    {password: hash}
+                ).exec((err) => {
+                    if (err) return res.json(Utils.return_error(err));
+                    else return res.json({
                         err: false,
-                        warning: true,
-                        msg: pword_invalid_msg,
-                        exists: null,
+                        warning: false,
+                        msg: account_updated_msg,
+                        exists: false,
                         user: null
-                    });
-                } else {
-                    // Hash the password.
-                    bcrypt.hash(valuesToUpdate.password, 10, function(err, hash) {
-                        if(err) return res.json(Utils.return_error(err));
-                        // Update desired User model with new data.
-                        User.update(
-                            {id: device.owner},
-                            {password: hash}
-                        ).exec((err) => {
-                            if (err) return res.json(Utils.return_error(err));
-                            else return res.json({
-                                err: false,
-                                warning: false,
-                                msg: account_updated_msg,
-                                exists: false,
-                                user: null
-                            }); 
-                        });
-                    });
-                }
-            } else {
-                return res.json({
-                    err: false,
-                    warning: true,
-                    msg: device_unauth_msg,
-                    exists: null,
-                    token: null,
-                    user: null
+                    }); 
                 });
-            }
-        });
+            });
+        }
     }
 	
 };
