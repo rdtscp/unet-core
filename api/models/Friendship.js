@@ -25,12 +25,26 @@ module.exports = {
     receiver: {
       type: 'string',
       required: true
+    },
+
+    // Function that returns the user requesting this data's friend username.
+    friend: function (currUserID) {
+      switch (currUserID) {
+        case this.sender:
+          return this.receiver;
+        default:
+          return this.sender;
+      }
     }
 
   },
 
   /*
-   * Takes some JSON representation of a User that sent and User to receive a Friendship request, and tries to fetch them.
+   * Method takes two users, and returns them (if they exist).
+   *  
+   * sender:   JSON representation of the User that sent a specific request.
+   * receiver: JSON representation of the User that has/is to receive the request
+   * 
    */
   getUsers: function(sender, receiver, cb) {
     var tasks = [];
