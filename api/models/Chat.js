@@ -39,6 +39,12 @@ module.exports = {
         type: 'integer',
         defaultsTo: '0'
       },
+
+      // List of all messages in the chat.
+      messages: {
+          collection: 'Message',
+          via: 'chat'
+      },
   
       // Function that returns the user requesting this data's friend username.
       friend: function (currUserID) {
