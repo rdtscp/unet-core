@@ -51,7 +51,11 @@ module.exports = {
     ).exec((err, chat) => {
       if (err) cb(err);
       if (chat) {
-        cb();
+        // Update the Chat with this new message.
+        Chat.find().populate('messages').exec((err, popdUsers) => {
+          if (err) cb(err);
+          else cb();
+        });
       } else {
         cb('Attempted to send a message to a chat that does not exist.');
       }
