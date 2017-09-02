@@ -60,6 +60,16 @@ module.exports.policies = {
     create: 'sessionAuth',
     destroy: 'sessionAuth',
     update: 'sessionAuth'
+  },
+
+  ChatController: {
+    getall: 'sessionAuth',
+    get: 'sessionAuth',
+    create: 'sessionAuth',
+  },
+
+  MessageController: {
+    create: 'sessionAuth'
   }
 
 };
