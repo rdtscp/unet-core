@@ -7,6 +7,10 @@
 
 module.exports = {
     
+    /*
+     * Query to check and see if a device auth token is still valid.
+     * 
+     */
     get: function (req, res) {
         // Parse POST for User params.
         var authToken   = req.param('token');
