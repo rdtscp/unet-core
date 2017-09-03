@@ -20,20 +20,22 @@ module.exports = {
      */
     getall: function (req,res) {
         var authToken     = req.param('token');
-        var userID        = req.options.userid;
+        var user          = req.options.user;
         Chat.find({
             or: [
-                {user_one: userID},
-                {user_two: userID}
+                {user_one: user.id},
+                {user_two: user.id}
             ]
         }).exec((err, chats) => {
             if (err) return res.json(Utils.return_error(err));
-            return res.json({
-                err: false,
-                warning: false,
-                message: null,
-                chats: chats
-            })
+            Chat.getFriend(user, chats, (out_chats) => {
+                return res.json({
+                    err: false,
+                    warning: false,
+                    message: null,
+                    chats: out_chats
+                })
+            });
         });
     },
 
@@ -83,7 +85,7 @@ module.exports = {
     create: function (req, res) {
         // Parse POST for User params.
         var requestedUser = req.param('username');
-        var userID        = req.options.userid;
+        var user          = req.options.user;
         // Check a friendship exists between the requested Users.
         User.findOne({
             username: requestedUser
@@ -91,12 +93,12 @@ module.exports = {
             if (err) return res.json(Utils.return_error(err));
             // If the request User exists.
             if (friend) {
-                Friendship.friendshipExists(userID, friend.id, (err, friendship) => {
+                Friendship.friendshipExists(user.id, friend.id, (err, friendship) => {
                     if (err) return res.json(Utils.return_error(err));
                     // If the friendship exists.
                     if (friendship) {
                         Chat.create({
-                            user_one: userID,
+                            user_one: user.id,
                             user_two: friend.id
                         }).exec((err, chat) => {
                             if (err) return res.json(Utils.return_error(err));
