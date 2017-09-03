@@ -29,11 +29,11 @@ module.exports = {
      * }
      */
     getall: function (req, res) {
-        var userID = req.options.userid;
+        var user = req.options.user;
         Friendship.find({
             or: [
-                {receiver: userID},
-                {sender: userID, confirmed: true}
+                {receiver: user.id},
+                {sender: user.id, confirmed: true}
             ]
         }).exec((err, friendships) => {
             if (err) return res.json(Utils.return_error(err));
@@ -86,14 +86,16 @@ module.exports = {
     create: function (req, res) {
         // Parse POST for User params.
         var requestedUser = req.param('username');
-        var userID        = req.options.userid;
+        var user          = req.options.user;
         // Check Users required for this Friendship exist.
-        User.getUsers({id: userID}, {username: requestedUser}, (err, sender, receiver) => {
+        User.findOne({
+            username: requestedUser
+        }).exec((err, receiver) => {
             if (err) return res.json(Utils.return_error(err));
-            if (sender && receiver) {
+            if (receiver) {
                 // Create new Friendship.
                 Friendship.create({
-                    sender: sender.id,
+                    sender: user.id,
                     receiver: receiver.id
                 }).exec((err, newFriendship) => {
                     if (err) return res.json(Utils.return_error(err));
@@ -112,7 +114,7 @@ module.exports = {
                     friendship: null
                 });
             }
-        });
+        })
     },
 
     /* 'post /unet/friendship/destroy'
@@ -129,16 +131,18 @@ module.exports = {
     destroy: function (req, res) {
         // Parse POST for User params.
         var requestedUser = req.param('username');
-        var userID        = req.options.userid;
+        var user          = req.options.user;
         // Check Users required for this Friendship exist.
-        User.getUsers({id: userID}, {username: requestedUser}, (err, sender, receiver) => {
+        User.findOne({
+            username: requestedUser
+        }).exec((err, friend) => {
             if (err) return res.json(Utils.return_error(err));
-            if (sender && receiver) {
+            if (friend) {
                 // Destroy Friendship.
                 Friendship.destroy({
                     or: [
-                        {sender: sender.id, receiver: receiver.id},
-                        {sender: receiver.id, receiver: sender.id}
+                        {sender: user.id, receiver: friend.id},
+                        {sender: friend.id, receiver: user.id}
                     ]
                 }).exec((err, destroyedFriendship) => {
                     if (err) return res.json(Utils.return_error(err));
@@ -174,9 +178,9 @@ module.exports = {
     update: function (req, res) {
         // Parse POST for params.
         var requestID   = req.param('id');
-        var userID      = req.options.userid;
+        var user        = req.options.user;
         Friendship.update(
-            {id: requestID, receiver: userID, confirmed: false },
+            {id: requestID, receiver: user.id, confirmed: false },
             {confirmed: true}
         ).exec((err, friendship) => {
             if (err) return res.json(Utils.return_error(err));

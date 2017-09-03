@@ -16,10 +16,15 @@ module.exports = function(req, res, next) {
       token: authToken
   }).exec((err, device) => {
     if (err) return res.serverError(err);
-    // If the device exists and is authenticated, append the Users id to the req.options.userid var.
+    // If the device exists and is authenticated, find the User.
     if (device) {
-      req.options.userid = device.owner;
-      return next();
+      User.findOne({
+        id: device.owner
+      }).exec((err, user) => {
+        if (err) return res.serverError(err);
+        req.options.user = user;
+        return next();
+      });
     } else {
       return res.forbidden('You are not permitted to perform this action.');
     }
