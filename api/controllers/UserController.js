@@ -200,10 +200,10 @@ module.exports = {
     destroy: function (req, res) {
         // Parse POST for User params.
         var authToken = req.param('token');
-        var userID    = req.options.userid;
+        var user      = req.options.user;
         // Remove the User model from the table. User model will delete its dependent children.
         User.destroy({
-            id: userID
+            id: user.id
         }).exec((err) => {
             if (err) return res.json(Utils.return_error(err));
             else return res.json({
@@ -232,7 +232,7 @@ module.exports = {
         // Parse POST for User params.
         var valuesToUpdate      = {};
         valuesToUpdate.password = req.param('password');
-        var userID              = req.options.userid;
+        var user                = req.options.user;
         // Check new password is valid.
         if (valuesToUpdate.password.search(pword_regexp) == -1) {
             return res.json({
@@ -248,7 +248,7 @@ module.exports = {
                 if(err) return res.json(Utils.return_error(err));
                 // Update desired User model with new data.
                 User.update(
-                    {id: userID},
+                    {id: user.id},
                     {password: hash}
                 ).exec((err) => {
                     if (err) return res.json(Utils.return_error(err));
