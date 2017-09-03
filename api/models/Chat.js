@@ -12,13 +12,11 @@ module.exports = {
     attributes: {
   
       user_one: {
-        type: 'string',
-        required: true
+        model: 'User'
       },
 
       user_two: {
-        type: 'string',
-        required: true
+        model: 'User'
       },
 
       last_msg: {
@@ -48,24 +46,45 @@ module.exports = {
   
       // Function that returns the user requesting this data's friend username.
       friend: function (currUserID) {
-        switch (currUserID) {
-          // If the requesting user is user_one, return user_two's User model.
-          case this.user_one:
-            User.findOne({id: this.user_two}).exec((err, user) => {
-              if (err) return Utils.errorJson(err);
-              if (user) return user;
-              else return Utils.return_error('User does not exist.');
-            });
-          // Else the user is user_two, return user_one's User model.
-          default:
-            User.findOne({id: this.user_one}).exec((err, user) => {
-              if (err) return Utils.errorJson(err);
-              if (user) return user;
-              else return Utils.return_error('User does not exist.');
-            });
-        }
-      }
+        
+      },
   
+    },
+
+    // Returns input list with new attribute 'friend' which contains the model for the friend.
+    getFriend(currUser, chats, cb) {
+        var tasks = [];
+        var output = [];
+        for (var i=0; i < chats.length; i++) {
+            var chat = chats[i];
+            switch (currUser.id) {
+                // If the requesting user is user_one, return user_two's User model.
+                case chat.user_one:
+                    tasks.push(
+                        User.findOne({id: chat.user_two}).then((user) => {
+                            var out_chat = chat;
+                            out_chat.friend = { username: user.username, id: user.id };
+                            output.push(out_chat);
+                            return;
+                        })
+                    );
+                // Else the user is user_two, return user_one's User model.
+                default:
+                    tasks.push(
+                        User.findOne({id: chat.user_one}).then((user) => {
+                            var out_chat = chat;
+                            out_chat.friend = { username: user.username, id: user.id };
+                            output.push(out_chat);
+                            return;
+                        })
+                    );
+            }
+        }
+        return Promise
+        .all(tasks)
+        .then(result => {
+            cb(output);
+        });
     },
 
     // Retrieves the next 10 messages starting from message# startingNum in chat chatID.
