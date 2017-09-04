@@ -92,6 +92,7 @@ module.exports = {
         // Parse POST for User params.
         var requestedUser = req.param('username');
         var user          = req.options.user;
+        if (requestedUser == user.username) return res.json({err: false, warning: true, msg: 'You cannot add yourself as a friend!'})
         // Check Users required for this Friendship exist.
         User.findOne({
             username: requestedUser
@@ -151,37 +152,22 @@ module.exports = {
      */
     destroy: function (req, res) {
         // Parse POST for User params.
-        var requestedUser = req.param('username');
+        var friendshipID  = req.param('id');
         var user          = req.options.user;
-        // Check Users required for this Friendship exist.
-        User.findOne({
-            username: requestedUser
-        }).exec((err, friend) => {
+        // Destroy Friendship.
+        Friendship.destroy({
+            or: [
+                {id: friendshipID, sender: user.id},
+                {id: friendshipID, receiver: user.id}
+            ]
+        }).exec((err, destroyedFriendship) => {
             if (err) return res.json(Utils.return_error(err));
-            if (friend) {
-                // Destroy Friendship.
-                Friendship.destroy({
-                    or: [
-                        {sender: user.id, receiver: friend.id},
-                        {sender: friend.id, receiver: user.id}
-                    ]
-                }).exec((err, destroyedFriendship) => {
-                    if (err) return res.json(Utils.return_error(err));
-                    return res.json({
-                        err: false,
-                        warning: false,
-                        msg: friend_removed_msg,
-                        friendship: destroyedFriendship
-                    });
-                });
-            } else {
-                return res.json({
-                    err: false,
-                    warning: true,
-                    msg: device_unauth_msg,
-                    friendship: null
-                });
-            }
+            return res.json({
+                err: false,
+                warning: false,
+                msg: friend_removed_msg,
+                friendship: destroyedFriendship
+            });
         });
     },
     
