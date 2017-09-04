@@ -11,6 +11,7 @@
  // Create messages.
  var user_exist_msg        = 'Requested user does not exist';
  var sent_request_msg      = 'Friend request sent';
+ var friendship_exists     = 'You have already sent this user a request, or they are already your friend.';
 
  // Destroy messages.
  var friend_removed_msg    = 'Succesfully removed Friend';
@@ -93,24 +94,40 @@ module.exports = {
         }).exec((err, receiver) => {
             if (err) return res.json(Utils.return_error(err));
             if (receiver) {
-                // Create new Friendship.
-                Friendship.create({
+                // Check if a request already exists.
+                Friendship.findOne({
                     sender: user.id,
                     receiver: receiver.id
-                }).exec((err, newFriendship) => {
+                }).exec((err, existingFriendship) => {
                     if (err) return res.json(Utils.return_error(err));
-                    return res.json({
-                        err: false,
-                        warning: false,
-                        msg: sent_request_msg,
-                        friendship: newFriendship
-                    });
+                    if (existingFriendship) {
+                        return res.json({
+                            err: false,
+                            warning: true,
+                            msg: friendship_exists,
+                            friendship: existingFriendship
+                        });
+                    } else {
+                        // Create new Friendship.
+                        Friendship.create({
+                            sender: user.id,
+                            receiver: receiver.id
+                        }).exec((err, newFriendship) => {
+                            if (err) return res.json(Utils.return_error(err));
+                            return res.json({
+                                err: false,
+                                warning: false,
+                                msg: sent_request_msg,
+                                friendship: newFriendship
+                            });
+                        });
+                    }
                 });
             } else {
                 return res.json({
                     err: false,
                     warning: true,
-                    msg: device_unauth_msg,
+                    msg: user_exist_msg,
                     friendship: null
                 });
             }
