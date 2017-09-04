@@ -30,11 +30,17 @@ module.exports = {
     },
 
     profile: {
-      collection: 'Profile',
-      via: 'owner'
-    }
+      model: 'Profile'
+    },
+
+    toJSON: function () {
+      let obj = this.toObject();
+      delete obj.password;
+      return obj;
+   }
 
   },
+
 
   // Called before a User model is created, will hash the password; returns error if hashing fails.
   beforeCreate: function (values, cb) {
