@@ -52,7 +52,7 @@ module.exports = {
                       User.findOne({id: friendship.receiver}).then((user) => {
                           var out_friendship = friendship;
                           out_friendship.friend = user.id;
-                          output.push(out_chat);
+                          output.push(out_friendship);
                           return;
                       })
                   );
