@@ -30,7 +30,8 @@ module.exports = {
     },
 
     profile: {
-      model: 'Profile'
+      model: 'Profile',
+      unique: true
     },
 
     toJSON: function () {
@@ -70,7 +71,7 @@ module.exports = {
       Device.destroy({owner: userID}).exec(cb);
       Friendship.destroy({receiver: userID, confirmed: false}).exec(cb);
       Friendship.destroy({sender: userID, confirmed: false}).exec(cb);
-      // Profile.destroy({sender: userID, confirmed: false}).exec(cb);
+      // @TODO Profile.destroy({TODO}).exec(cb);
   },
 
   /* Method takes two users, and returns them (if they exist).

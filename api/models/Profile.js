@@ -18,10 +18,11 @@ module.exports = {
     },
 
     owner: {
-      model: 'User'
+      model: 'User',
+      unique: true
     },
 
   }
-  
+
 };
 
