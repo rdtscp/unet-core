@@ -5,8 +5,6 @@
  * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
  */
 
-const bcrypt = require('bcrypt');
-
 module.exports = {
 
   connection: 'unet',
@@ -23,16 +21,7 @@ module.exports = {
       model: 'User'
     },
 
-  },
-
-  afterCreate: function (newProfile, cb) {
-    // Update the User with this new device.
-    User.find().populate('profile').exec((err, popdUsers) => {
-        if (err) cb(err);
-        else cb();
-    });
-    
-}
+  }
   
 };
 
