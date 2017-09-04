@@ -70,6 +70,10 @@ module.exports.policies = {
 
   MessageController: {
     create: 'sessionAuth'
-  }
+  },
+
+  ProfileController: {
+    get: 'sessionAuth'
+  },
 
 };
