@@ -34,7 +34,7 @@ module.exports = {
                     warning: false,
                     message: null,
                     chats: out_chats
-                })
+                });
             });
         });
     },
