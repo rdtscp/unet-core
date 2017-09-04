@@ -29,6 +29,11 @@ module.exports = {
       via: 'owner'
     },
 
+    profile: {
+      collection: 'Profile',
+      via: 'owner'
+    }
+
   },
 
   // Called before a User model is created, will hash the password; returns error if hashing fails.
@@ -39,6 +44,11 @@ module.exports = {
       values.password = hash;
       cb();
     });
+  },
+
+  // After a User has been created, create them a Profile.
+  afterCreate: function(newlyInsertedRecord, cb) {
+    Profile.create({ username: newlyInsertedRecord.username, owner: newlyInsertedRecord.id }).exec(cb);
   },
   
   // After a User's credentials have been updated, de-auth all their devices.
@@ -54,39 +64,37 @@ module.exports = {
       Device.destroy({owner: userID}).exec(cb);
       Friendship.destroy({receiver: userID, confirmed: false}).exec(cb);
       Friendship.destroy({sender: userID, confirmed: false}).exec(cb);
+      // Profile.destroy({sender: userID, confirmed: false}).exec(cb);
   },
 
-  /*
-   * Method takes two users, and returns them (if they exist).
+  /* Method takes two users, and returns them (if they exist).
    *  
    * sender:   JSON representation of the User that sent a specific request.
    * receiver: JSON representation of the User that has/is to receive the request
-   * 
    */
   getUsers: function(sender, receiver, cb) {
-    var tasks = [];
-    var out_sender;
-    var out_receiver;
-    tasks.push(
-        User.findOne(sender).then((user) => {
-            if (user) out_sender = user;
-            return;
-        })
-    );
-    tasks.push(
-      User.findOne(receiver).then((user) => {
-          if (user) out_receiver = user;
-          return;
-      })
-    );
-    return Promise
-    .all(tasks)
-    .then(result => {
-        if (out_sender && out_receiver) cb(null, out_sender, out_receiver);
-        else if (!out_receiver) cb('Requested user does not exist.', null, null);
-        else cb('Error: User that sent request could not be retrieved.', null, null);
-    });
-
+      var tasks = [];
+      var out_sender;
+      var out_receiver;
+      tasks.push(
+          User.findOne(sender).then((user) => {
+              if (user) out_sender = user;
+              return;
+          })
+      );
+      tasks.push(
+          User.findOne(receiver).then((user) => {
+              if (user) out_receiver = user;
+              return;
+          })
+      );
+      return Promise
+      .all(tasks)
+      .then(result => {
+          if (out_sender && out_receiver) cb(null, out_sender, out_receiver);
+          else if (!out_receiver) cb('Requested user does not exist.', null, null);
+          else cb('Error: User that sent request could not be retrieved.', null, null);
+      });
   },
   
 };

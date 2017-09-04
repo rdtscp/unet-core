@@ -125,6 +125,13 @@ module.exports.routes = {
   'post /unet/message/create': {
     controller: 'MessageController',
     action: 'create'
+  },
+
+  // Profile Controller
+
+  'post /unet/profile/get': {
+    controller: 'ProfileController',
+    action: 'get'
   }
 
 };
