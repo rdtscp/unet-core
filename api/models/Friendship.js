@@ -46,25 +46,19 @@ module.exports = {
       for (var i=0; i < friendships.length; i++) {
           var friendship = friendships[i];
           switch (currUser.id) {
-              // If the requesting user is user_one, return user_two's User model.
+              // If the requesting user is the sender, set 'friend' to the receiver.
               case friendship.sender:
+                  var editedFriendship = friendship;
+                  editedFriendship.friend = editedFriendship.receiver;
                   tasks.push(
-                      User.findOne({id: friendship.receiver}).then((user) => {
-                          var out_friendship = friendship;
-                          out_friendship.friend = user.id;
-                          output.push(out_friendship);
-                          return;
-                      })
+                      output.push(editedFriendship)
                   );
-              // Else the user is user_two, return user_one's User model.
+              // Else the requesting user is the receiver, set 'friend' to the sender.
               default:
+                  var editedFriendship = friendship;
+                  editedFriendship.friend = editedFriendship.sender;
                   tasks.push(
-                      User.findOne({id: friendship.sender}).then((user) => {
-                          var out_friendship = friendship;
-                          out_friendship.friend = user.id;
-                          output.push(out_friendship);
-                          return;
-                      })
+                      output.push(editedFriendship)
                   );
           }
       }
