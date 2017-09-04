@@ -38,11 +38,13 @@ module.exports = {
             ]
         }).exec((err, friendships) => {
             if (err) return res.json(Utils.return_error(err));
-            return res.json({
-                err: false,
-                warning: false,
-                message: null,
-                friendships: friendships
+            Friendship.getFriend(user, friendships, (out_friendships) => {
+                return res.json({
+                    err: false,
+                    warning: false,
+                    message: null,
+                    friendships: out_friendships
+                });
             });
         });
     },
@@ -64,12 +66,14 @@ module.exports = {
             id: friendshipID
         }).exec((err, friendship) => {
             if (err) return res.json(Utils.return_error(err));
-            return res.json({
-                err: false,
-                warning: false,
-                message: null,
-                friendship: friendship
-            })
+            Friendship.getFriend(user, friendship, (out_friendship) => {
+                return res.json({
+                    err: false,
+                    warning: false,
+                    message: null,
+                    friendships: out_friendship
+                });
+            });
         });
     },
     
