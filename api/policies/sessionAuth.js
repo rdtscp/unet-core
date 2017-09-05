@@ -20,7 +20,7 @@ module.exports = function(req, res, next) {
     if (device) {
       User.findOne({
         id: device.owner
-      }).populate('profile').exec((err, user) => {
+      }).populate('profile').populate('devices').populate('chats').exec((err, user) => {
         if (err) return res.serverError(err);
         req.options.user = user;
         return next();
