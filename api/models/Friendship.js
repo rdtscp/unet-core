@@ -39,15 +39,39 @@ module.exports = {
       });
   },
 
-  /*
-   * Method takes two users, and returns if a Friendship exists between them.
+  /* 
+   * Method takes a user, and a list of Profiles, and returns a subset of Profiles that the user is friends with.
    */
-  friendshipExists(user_one, user_two, cb) {
+  areFriends(user, friendsProfiles, cb) {
+      var tasks = [];
+      var output = [];
+      for (var i=0; i < friendsProfiles.length; i++) {
+        var currProfile = friendsProfiles[i];
+        tasks.push(
+            friendshipExists(user.profile, currProfile, (err, friendship) => {
+                output.push(friendship);
+                return;
+            })
+        );
+      }
+      return Promise
+      .all(tasks)
+      .then(result => {
+          cb(output);
+      }).catch((err) => {
+          console.log(err);
+      });
+  },
+
+  /*
+   * Method takes two users profiles, and returns if a Friendship exists between them.
+   */
+  friendshipExists(user_oneProfile, user_twoProfile, cb) {
       // Find a friendship
       Friendship.findOne({
           or: [
-            {sender: user_one, receiver: user_two, confirmed: true},
-            {sender: user_two, receiver: user_one, confirmed: true}
+            {sender: user_oneProfile.id, receiver: user_twoProfile.id, confirmed: true},
+            {sender: user_twoProfile.id, receiver: user_oneProfile.id, confirmed: true}
           ]
       }).exec((err, friendship) => {
           if (err) cb(err, null);
