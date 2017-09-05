@@ -7,27 +7,29 @@
 
 module.exports = {
 
-  connection: 'unet',
-  identity: 'Profile',
-  attributes: {
+    connection: 'unet',
+    identity: 'Profile',
+    attributes: {
 
-    username: {
-      type: 'string',
-      required: true,
-      unique: true,
+        // Contains a single ID to its owner.
+        owner: {
+            model: 'User',
+            unique: true,
+        },
+
+        // Contains a list of Chat models this Profile is a member of.
+        chats: {
+            collection: 'Chat',
+            via: 'users'
+        },
+
+        username: {
+            type: 'string',
+            required: true,
+            unique: true,
+        },
+
     },
-
-    owner: {
-      model: 'User',
-      unique: true,
-    },
-
-  },
-
-  // After a Profile has been created, link it to its User.
-  afterCreate: function(newlyInsertedRecord, cb) {
-      User.update(newlyInsertedRecord.owner,{profile: newlyInsertedRecord}).exec(cb);
-  },
 
 };
 
