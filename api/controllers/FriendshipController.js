@@ -39,7 +39,14 @@ module.exports = {
             ]
         }).populate('sender').populate('receiver').exec((err, friendships) => {
             if (err) return res.json(Utils.return_error(err));
-            // @TODO Include data about which User the 'friend' is in this relationship.
+            // Include data about which User the 'friend' is in this relationship.
+            friendships.forEach((friendship) => {
+                if (friendship.sender.id == user.id) {
+                    friendship.friend = friendship.receiver;
+                } else {
+                    friendship.friend = friendship.sender;
+                }
+            });
             return res.json({
                 err: false,
                 warning: false,
