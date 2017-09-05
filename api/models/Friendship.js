@@ -18,15 +18,25 @@ module.exports = {
     },
 
     sender: {
-      model: 'User',
+      model: 'Profile',
       required: true
     },
 
     receiver: {
-      model: 'User',
+      model: 'Profile',
       required: true
     },
 
+  },
+
+  acceptRequest(request, cb) {
+      Friendship.update(
+        request,
+        {confirmed: true}
+      ).exec((err, newFriendship) => {
+          if (err) cb(err, null);
+          else cb(null, newFriendship);
+      });
   },
 
   /*
