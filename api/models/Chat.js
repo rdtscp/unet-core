@@ -11,12 +11,8 @@ module.exports = {
     identity: 'Chat',
     attributes: {
   
-      user_one: {
-        model: 'User'
-      },
-
-      user_two: {
-        model: 'User'
+      users: {
+        collection: 'User'
       },
 
       last_msg: {
