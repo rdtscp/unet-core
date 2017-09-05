@@ -21,21 +21,10 @@ module.exports = {
     getall: function (req,res) {
         var authToken     = req.param('token');
         var user          = req.options.user;
-        Chat.find({
-            or: [
-                {user_one: user.id},
-                {user_two: user.id}
-            ]
-        }).exec((err, chats) => {
-            if (err) return res.json(Utils.return_error(err));
-            Chat.getFriend(user, chats, (out_chats) => {
-                return res.json({
-                    err: false,
-                    warning: false,
-                    message: null,
-                    chats: out_chats
-                });
-            });
+        Profile.findOne({
+            id: user.profile.id
+        }).populate('chats').exec((err, profile) => {
+            return res.json(profile.chats)
         });
     },
 
@@ -84,46 +73,29 @@ module.exports = {
      */
     create: function (req, res) {
         // Parse POST for User params.
-        var requestedUser = req.param('username');
+        var chatName      = req.param('chatName');
+        var members       = req.param('members');
         var user          = req.options.user;
-        // Check a friendship exists between the requested Users.
-        User.findOne({
-            username: requestedUser
-        }).exec((err, friend) => {
+
+        // Push current user into chat members.
+        members.push(user.id);
+
+        console.log(members)
+
+        // @TODO Check that requesting user is indeed friends with all members.
+        Chat.create({
+            name: chatName
+        }).exec((err, newChat) => {
             if (err) return res.json(Utils.return_error(err));
-            // If the request User exists.
-            if (friend) {
-                Friendship.friendshipExists(user.id, friend.id, (err, friendship) => {
-                    if (err) return res.json(Utils.return_error(err));
-                    // If the friendship exists.
-                    if (friendship) {
-                        Chat.create({
-                            user_one: user.id,
-                            user_two: friend.id
-                        }).exec((err, chat) => {
-                            if (err) return res.json(Utils.return_error(err));
-                            return res.json({
-                                err: false,
-                                warning: false,
-                                msg: 'Created new chat',
-                                chat: chat
-                            });
-                        });
-                    } else {
-                        return res.json({
-                            error: false,
-                            warning: true,
-                            msg: 'Cannot create chat with a User you are not friends with.'
-                        })
-                    }
-                })
-            } else {
-                return res.json({
-                    err: false,
-                    warning: true,
-                    msg: 'Requested to create chat with User does not exist'
-                })
-            }
+            
+            newChat.users.add(members);
+            newChat.save((err) => {});
+            return res.json({
+                err: false,
+                warning: false,
+                msg: 'Created new chat',
+                chat: newChat
+            });
         });
     },
 
