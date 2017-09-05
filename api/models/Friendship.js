@@ -40,7 +40,7 @@ module.exports = {
   },
 
   /* 
-   * Method takes a user, and a list of Profiles, and returns a subset of Profiles that the user is friends with.
+   * Method takes a user, and a list of Profiles, and returns a subset of Profile ID's that the user is friends with.
    */
   areFriends(user, friendsProfiles, cb) {
       var tasks = [];
@@ -49,8 +49,13 @@ module.exports = {
         var currProfile = friendsProfiles[i];
         tasks.push(
             friendshipExists(user.profile, currProfile, (err, friendship) => {
-                output.push(friendship);
-                return;
+                if (friendship) {
+                    output.push(currProfile.id);
+                    return;
+                } else {
+                    output.push(null);
+                    return;
+                }
             })
         );
       }
