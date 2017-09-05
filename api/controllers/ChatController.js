@@ -77,26 +77,69 @@ module.exports = {
         var members       = req.param('members');
         var user          = req.options.user;
 
+        
+
         // Push current user into chat members.
         members.push(user.id);
 
-        console.log(members)
-
-        // @TODO Check that requesting user is indeed friends with all members.
-        Chat.create({
-            name: chatName
-        }).exec((err, newChat) => {
-            if (err) return res.json(Utils.return_error(err));
-            
-            newChat.users.add(members);
-            newChat.save((err) => {});
+        // Validate input.
+        if (members.length < 2) {
             return res.json({
                 err: false,
-                warning: false,
-                msg: 'Created new chat',
-                chat: newChat
+                warning: true,
+                msg: 'Cannot create a chat with less than 2 people.'
+            })
+        }
+        // Check if a chat already exists between these two users.
+        else if (members.length == 2) {
+            // See if a chat exists between these two users already.
+            var userOne = members[0];
+            var userTwo = members[1];
+            Chat.chatExists(userOne, userTwo, (exists) => {
+                if (!exist) {
+                    // @TODO Check that requesting user is indeed friends with all members.
+                    Chat.create({
+                        name: undefined
+                    }).exec((err, newChat) => {
+                        if (err) return res.json(Utils.return_error(err));
+                        // Add members to chat.
+                        newChat.users.add(members);
+                        newChat.save((err) => {if (err) console.log(err)});
+                        return res.json({
+                            err: false,
+                            warning: false,
+                            msg: 'Created new chat',
+                            chat: newChat
+                        });
+                    });
+                } else {
+                    return res.json({
+                        err: false,
+                        warning: true,
+                        msg: 'You already have a private chat with this user.'
+                    });
+                }
+            })
+            
+        }
+        // Else its a group chat, so make one.
+        else {
+            // @TODO Check that requesting user is indeed friends with all members.
+            Chat.create({
+                name: chatName
+            }).exec((err, newChat) => {
+                if (err) return res.json(Utils.return_error(err));
+                // Add members to chat.
+                newChat.users.add(members);
+                newChat.save((err) => {if (err) console.log(err)});
+                return res.json({
+                    err: false,
+                    warning: false,
+                    msg: 'Created new chat',
+                    chat: newChat
+                });
             });
-        });
+        }        
     },
 
     destroy: function (req, res) {
