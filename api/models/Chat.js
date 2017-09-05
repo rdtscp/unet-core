@@ -11,6 +11,11 @@ module.exports = {
     identity: 'Chat',
     attributes: {
   
+      name: {
+        type: 'string',
+        required: true
+      },
+
       users: {
         collection: 'User'
       },
@@ -38,11 +43,6 @@ module.exports = {
       messages: {
           collection: 'Message',
           via: 'chat'
-      },
-  
-      // Function that returns the user requesting this data's friend username.
-      friend: function (currUserID) {
-        
       },
   
     },
