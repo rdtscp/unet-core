@@ -169,7 +169,6 @@ module.exports = {
                 }).exec((err, user) => {
                     // Error; return error to client app.
                     if (err) return res.json(Utils.return_error(err));
-                    /* @TODO Initialise Account models, for example Profile/Upload Directory etc */
                     return res.json({
                         err: false,
                         warning: false,
@@ -264,10 +263,3 @@ module.exports = {
     }
 	
 };
-
-/* @TODO : Will queue IO operations involved with deleting a User.
- *  E.G. Deleting files.
- */
-function deleteUser(userID) {
-    // @TODO
-}
