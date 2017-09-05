@@ -7,6 +7,9 @@
 
  const bcrypt = require('bcrypt');
 
+  // get messages.
+  var get_failure_msg       = 'Invalid username or password.';
+
 module.exports = {
     
     /*' post /unet/device/get'
