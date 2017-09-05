@@ -50,6 +50,7 @@ module.exports.policies = {
   // }
   
   UserController: {
+    get: 'sessionAuth',
     update: 'sessionAuth',
     destroy: 'sessionAuth'
   },
