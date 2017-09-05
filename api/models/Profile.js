@@ -17,12 +17,6 @@ module.exports = {
             unique: true,
         },
 
-        // Contains a list of Chat models this Profile is a member of.
-        chats: {
-            collection: 'Chat',
-            via: 'users'
-        },
-
         username: {
             type: 'string',
             required: true,
