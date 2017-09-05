@@ -8,10 +8,6 @@
  const crypto = require('crypto');
  const bcrypt = require('bcrypt');
 
- // get messages.
- var get_success_msg       = 'Logged In';
- var get_failure_msg       = 'Invalid username or password.';
-
  // create messages.
  var uname_regexp          = /^[a-zA-Z0-9_-]{3,26}$/
  var pword_regexp          = /^((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{8,50})$/
@@ -22,9 +18,7 @@
 
  // Destroy/Update messages.
  var account_updated_msg   = 'Account succesfully updated. If you changed your password, you will need to re-login on your devices.';
- 
- // Auth messages.
- var device_unauth_msg     = 'This device is not authorised to perform that action.';
+
 
 module.exports = {
 
@@ -35,75 +29,19 @@ module.exports = {
      * {
      *     err: [ true | false ],
      *     warning: [ true | false ],
-     *     msg: Error, Warning or Success message; E.G. [ 'Incorrect username or password' ],
-     *     exists: [ true | false ],
-     *     token: Authentication token,
-     *     user: User.js model
+     *     msg: Error, Warning or Success message,
+     *     user: The User model of this requester
      * }
      *
      */
     get: function (req, res) {
-        // Parse POST for User params.
-        var uname  = req.param('username');
-        var pword  = req.param('password');
-
-        // Look up User.
-        User.findOne({
-            username: uname
-        }).populate("profile").exec((err, user) => {
-            if (err) return res.json(Utils.return_error(err));
-            if (user) {
-                // Check Password matches database password.
-                bcrypt.compare(pword, user.password, (err, match) => {
-                    if (err) return res.json(Utils.return_error(err));
-                    if (match) {
-                        // Generate an auth token.
-                        crypto.randomBytes(256, (err, buf) => {
-                            if (err) return res.json(Utils.return_error(err));
-                            // Create a new Device for this account to be authenticate to.
-                            Device.create({
-                                owner: user.id,
-                                ip: req.ip,
-                                user_agent: req.headers['user-agent'],
-                                token: buf.toString('hex')
-                            }).exec(function(err, newDevice) {
-                                if (err) return res.json(Utils.return_error(err));
-                                if (newDevice) {
-                                    // Return User.
-                                    return res.json({
-                                        err: false,
-                                        warning: false,
-                                        msg: get_success_msg,
-                                        exists: true,
-                                        token: buf.toString('hex'),
-                                        user: user
-                                    });
-                                } else {
-                                    return res.serverError('Error creating a device.');
-                                }
-                            });
-                        });
-                    } else {
-                        return res.json({
-                            err: false,
-                            warning: true,
-                            msg: get_failure_msg,
-                            exists: null,
-                            token: null,
-                            user: null
-                        });
-                    }
-                });
-            } else {
-                return res.json({
-                    err: false,
-                    warning: true,
-                    msg: get_failure_msg,
-                    exists: null,
-                    token: null,
-                    user: null
-                });
-            }
+        var authToken   = req.param('token');
+        var user        = req.options.user;
+        return res.json({
+            err: false,
+            warning: false,
+            message: null,
+            user: user
         });
     },
 
@@ -114,13 +52,11 @@ module.exports = {
      * {
      *     err: [ true | false ],
      *     warning: [ true | false ],
-     *     msg: Error, Warning or Success message; E.G. [ 'User already exists' | 'Password must contain 1 uppercase' ]
-     *     exists: [ true | false ],
-     *     user: User.js model
+     *     msg: Error, Warning or Success message; E.G. [ 'User already exists' | 'Password must contain 1 uppercase' ],
      * }
-     *
      */
     create: function (req, res) {
+
         // Parse POST for User params.
         var uname  = req.param('username');
         var pword  = req.param('password');
@@ -130,9 +66,7 @@ module.exports = {
             return res.json({
                 err: false,
                 warning: true,
-                msg: uname_invalid_msg,
-                exists: null,
-                user: null
+                msg: uname_invalid_msg
             });
         }
 
@@ -141,9 +75,7 @@ module.exports = {
             return res.json({
                 err: false,
                 warning: true,
-                msg: pword_invalid_msg,
-                exists: null,
-                user: null
+                msg: pword_invalid_msg
             })
         }
 
@@ -151,31 +83,27 @@ module.exports = {
         User.findOne({
             username: uname
         }).exec((err, user) => {
-            // Error; return error to client app.
+            // Error: return error to client app.
             if (err) return res.json(Utils.return_error(err));
             // If the user exists.
             if (user) {
+                // Return a warning that the user exists.
                 return res.json({
                     err: false,
                     warning: true,
-                    msg: user_exists_msg,
-                    exists: true,
-                    user: null
+                    msg: user_exists_msg
                 });
             } else {
                 User.create({
                     username: uname,
                     password: pword
                 }).exec((err, user) => {
-                    // Error; return error to client app.
+                    // Error: return error.
                     if (err) return res.json(Utils.return_error(err));
                     return res.json({
                         err: false,
                         warning: false,
-                        msg: user_created_msg,
-                        exists: false,
-                        username: user.username,
-                        id: user.id
+                        msg: user_created_msg
                     });
                 });
             }
@@ -207,9 +135,7 @@ module.exports = {
             else return res.json({
                 err: false,
                 warning: false,
-                msg: 'Account Deleted.',
-                exists: false,
-                user: null
+                msg: 'Account Deleted.'
             });
         });
     },
@@ -236,9 +162,7 @@ module.exports = {
             return res.json({
                 err: false,
                 warning: true,
-                msg: pword_invalid_msg,
-                exists: null,
-                user: null
+                msg: pword_invalid_msg
             });
         } else {
             // Hash the password.
@@ -253,9 +177,7 @@ module.exports = {
                     else return res.json({
                         err: false,
                         warning: false,
-                        msg: account_updated_msg,
-                        exists: false,
-                        user: null
+                        msg: account_updated_msg
                     }); 
                 });
             });
