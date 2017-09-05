@@ -7,35 +7,29 @@
 
 module.exports = {
     
-      connection: 'unet',
-      identity: 'Device',
-      attributes: {
-    
+    connection: 'unet',
+    identity: 'Device',
+    attributes: {
+
+        // User model that this Device is authenticated for.
         owner: {
             model: 'User'
         },
+
+        token: {
+            type: 'longtext',
+            required: true
+        },
+
         ip: {
             type: 'string',
             required: true
         },
+
         user_agent: {
             type: 'string'
-        },
-        token: {
-            type: 'longtext',
-            required: true
         }
-    
-      },
 
-      afterCreate: function (newDevice, cb) {
-          // Update the User with this new device.
-          User.find().populate('devices').exec((err, popdUsers) => {
-              if (err) cb(err);
-              else cb();
-          });
-      }
+    },
 
-    };
-    
-    
+};    

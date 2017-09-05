@@ -7,68 +7,49 @@
 
 module.exports = {
 
-  connection: 'unet',
-  identity: 'Message',
-  attributes: {
+    connection: 'unet',
+    identity: 'Message',
+    attributes: {
 
-    chat: {
-      model: 'Chat'
+        // The Chat model this Message belongs to.
+        chat: {
+            model: 'Chat'
+        },
+
+        // The Profile model this Message want created using.
+        sender: {
+            model: 'Profile'
+        },
+
+        // Populted using lifecycle callbacks.
+        message_num: {
+            type: 'integer'
+        },
+
+        timestamp: {
+            type: 'string'
+        },
+
+        message: {
+            type: 'longtext'
+        }
+
     },
 
-    timestamp: {
-      type: 'string',
-    },
-
-    message: {
-      type: 'longtext'
-    },
-
-    message_num: {
-      type: 'integer',
-    },
-
-    sender: {
-      type: 'string',
-      required: true
-    }
-
-  },
-
-  // Called before a Message model is created, will 
-  beforeCreate: function (values, cb) {
-    Chat.findOne({
-      id: values.chat
-    }).exec((err, chat) => {
-      if (err) cb(err);
-      if (chat) {
-        values.message_num = chat.num_msgs + 1;
-        cb();
-      } else {
-        cb('Attempted to send a message to a chat that does not exist.');
-      }
-    });
-  },
-
-  afterCreate: function (newlyInsertedRecord, cb) {
-    var msg = newlyInsertedRecord.message.substring(0,26);
-    Chat.update(
-      {id: newlyInsertedRecord.chat},
-      {num_msgs: newlyInsertedRecord.message_num, last_msg: msg, lastSender: newlyInsertedRecord.sender }
-    ).exec((err, chat) => {
-      if (err) cb(err);
-      if (chat) {
-        // Update the Chat with this new message.
-        Chat.find().populate('messages').exec((err, popdUsers) => {
-          if (err) cb(err);
-          else cb();
+    // Called before a Message model is created, gets its parent chats number of messages.
+    beforeCreate: function (values, cb) {
+        Chat.findOne({
+            id: values.chat
+        }).populate('messages').exec((err, chat) => {
+            if (err) cb(err);
+            if (chat) {
+                values.message_num = chat.messages.length + 1;
+                cb();
+            } else {
+                cb('Attempted to send a message to a chat that does not exist.');
+            }
         });
-      } else {
-        cb('Attempted to send a message to a chat that does not exist.');
-      }
-    })
-  }
-
-
+    },
 
 };
 

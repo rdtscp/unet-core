@@ -10,40 +10,37 @@ module.exports = {
     connection: 'unet',
     identity: 'Chat',
     attributes: {
-  
-      name: {
-        type: 'string',
-        required: true
-      },
 
-      users: {
-        collection: 'User'
-      },
+        // List of Profiles in this chat.
+        users: {
+            collection: 'Profile',
+            via: 'chats'
+        },
 
-      last_msg: {
-        type: 'string',
-        defaultsTo: 'You are now connected!'
-      },
-  
-      last_sender: {
-        type: 'integer'
-      },
-  
-      last_active: {
-        type: 'string',
-        defaultsTo: Utils.currDate()
-      },
-  
-      num_msgs: {
-        type: 'integer',
-        defaultsTo: '0'
-      },
+        // List of all messages in the chat.
+        messages: {
+            collection: 'Message',
+            via: 'chat'
+        },
 
-      // List of all messages in the chat.
-      messages: {
-          collection: 'Message',
-          via: 'chat'
-      },
+        name: {
+            type: 'string',
+            required: true
+        },
+
+        last_msg: {
+            type: 'string',
+            defaultsTo: 'You are now connected!'
+        },
+    
+        last_sender: {
+            type: 'integer'
+        },
+    
+        last_active: {
+            type: 'string',
+            defaultsTo: Utils.currDate()
+        },     
   
     },
 
