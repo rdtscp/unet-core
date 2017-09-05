@@ -5,6 +5,8 @@
  * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
  */
 
+ const crypto = require('crypto');
+
 module.exports = {
     
     connection: 'unet',
@@ -30,6 +32,16 @@ module.exports = {
             type: 'string'
         }
 
+    },
+
+    // Called before a Device model is created.
+    beforeCreate: (values, cb) => {
+        // Generate random token.
+        crypto.randomBytes(256, (err, buf) => {
+            if (err) cb(err);
+            values.token = buf.toString('hex');
+            cb();
+        });
     },
 
 };    

@@ -5,7 +5,7 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
-const bcrypt = require('bcrypt');
+ const bcrypt = require('bcrypt');
 
 module.exports = {
     
@@ -61,21 +61,27 @@ module.exports = {
                 bcrypt.compare(pword, user.password, (err, match) => {
                     if (err) return res.json(Utils.return_error(err));
                     if (match) {
-                        User.authenticateDevice(user, req.ip, req.headers['user-agent'], (err, token) => {
+                        // Create a new Device for this account to be authenticate to.
+                        Device.create({
+                            owner: user.id,
+                            ip: req.ip,
+                            user_agent: req.headers['user-agent'],
+                            token: 'replaced'
+                        }).exec((err, newDevice) => {
                             if (err) return res.json(Utils.return_error(err));
-                            if (token) {
-                                // Return empty response.
+                            if (newDevice) {
                                 return res.json({
                                     err: false,
                                     warning: false,
-                                    msg: null,
-                                    token: token
+                                    exists: false,
+                                    token: newDevice.token
                                 });
                             } else {
                                 return res.json({
-                                    err: true,
+                                    err: false,
                                     warning: true,
-                                    msg: '500 Server Error: Device has not been authenticated.'
+                                    msg: '500 Server Error: Unable to authenticate device, please try again.',
+                                    exists: false
                                 });
                             }
                         });
