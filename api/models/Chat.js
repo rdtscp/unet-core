@@ -43,6 +43,32 @@ module.exports = {
   
     },
 
+    chatExists(userOne, userTwo, cb) {
+        // Get all Chats, and their EserU, where the Chat's name == null.
+        Chat.find().populate('users', {name: null}).exec((err, chats) => {
+            var output = [];
+            chats.forEach((chat) => {
+                var user_one = chat.users[0].id;
+                var user_two = chat.users[1].id;
+                if ((user_one == userOne) && (user_two == userTwo)) {
+                    // Push true to indicate this chat is the same as the one between userOne and userTwo.
+                    output.push(true);
+                }
+                else if ((user_two == userOne) && (user_one == userTwo)) {
+                    // Push true to indicate this chat is the same as the one between userOne and userTwo.
+                    output.push(true);
+                }
+                else {
+                    // Push true to indicate this chat is NOT the same as the one between userOne and userTwo.
+                    output.push(false);
+                }
+            });
+            var exists = output.indexOf(true);
+            if (exists > -1) cb(true);
+            else cb(false);
+        });
+    },
+
     // Returns input list with new attribute 'friend' which contains the model for the friend.
     getFriend(currUser, chats, cb) {
         var tasks = [];
