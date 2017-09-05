@@ -13,7 +13,7 @@ module.exports = {
 
         // List of Profiles in this chat.
         users: {
-            collection: 'Profile',
+            collection: 'User',
             via: 'chats'
         },
 
