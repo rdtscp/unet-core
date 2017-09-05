@@ -41,7 +41,7 @@ module.exports = {
             if (err) return res.json(Utils.return_error(err));
             // Include data about which User the 'friend' is in this relationship.
             friendships.forEach((friendship) => {
-                if (friendship.sender.id == user.id) {
+                if (friendship.sender.id == user.profile.id) {
                     friendship.friend = friendship.receiver;
                 } else {
                     friendship.friend = friendship.sender;
