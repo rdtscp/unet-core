@@ -11,7 +11,8 @@
  // Create messages.
  var user_exist_msg        = 'Requested user does not exist';
  var sent_request_msg      = 'Friend request sent';
- var friendship_exists     = 'You have already sent this user a request, or they are already your friend.';
+ var friendship_exists     = 'You are already friends with this user.';
+ var request_already_sent  = 'You have already sent this user a request.'
 
  // Destroy messages.
  var friend_removed_msg    = 'Succesfully removed Friend';
@@ -26,25 +27,24 @@ module.exports = {
      *     err: [ true | false ],
      *     warning: [ true | false ],
      *     msg: Error, Warning or Success message; E.G. [ 'Failed to retrieve Friendships' ],
-     *     friendships: [ Array of Friendship.js models ]
+     *     friendships: [ Array of Friendship.js models including the users populated profiles. ],
      * }
      */
     getall: function (req, res) {
         var user = req.options.user;
         Friendship.find({
             or: [
-                {receiver: user.id},
-                {sender: user.id, confirmed: true}
+                {receiver: user.profile.id},
+                {sender: user.profile.id, confirmed: true}
             ]
-        }).exec((err, friendships) => {
+        }).populate('sender').populate('receiver').exec((err, friendships) => {
             if (err) return res.json(Utils.return_error(err));
-            Friendship.getFriend(user, friendships, (out_friendships) => {
-                return res.json({
-                    err: false,
-                    warning: false,
-                    message: null,
-                    friendships: out_friendships
-                });
+            // @TODO Include data about which User the 'friend' is in this relationship.
+            return res.json({
+                err: false,
+                warning: false,
+                message: null,
+                friendships: friendships
             });
         });
     },
@@ -96,27 +96,58 @@ module.exports = {
         // Check Users required for this Friendship exist.
         User.findOne({
             username: requestedUser
-        }).exec((err, receiver) => {
+        }).populate('profile').exec((err, receiver) => {
             if (err) return res.json(Utils.return_error(err));
             if (receiver) {
-                // Check if a request already exists.
+                // Check if a friendship already exists.
                 Friendship.findOne({
-                    sender: user.id,
-                    receiver: receiver.id
+                    or: [
+                        {sender: user.profile.id, receiver: receiver.profile.id},
+                        {sender: receiver.profile.id, receiver: user.profile.id}
+                    ]
                 }).exec((err, existingFriendship) => {
                     if (err) return res.json(Utils.return_error(err));
                     if (existingFriendship) {
-                        return res.json({
-                            err: false,
-                            warning: true,
-                            msg: friendship_exists,
-                            friendship: existingFriendship
-                        });
+                        // Check if an existing friendship exists.
+                        if (existingFriendship.confirmed) {
+                            return res.json({
+                                err: false,
+                                warning: true,
+                                msg: friendship_exists
+                            });
+                        }
+                        // Check if an acceptable request exists.
+                        else if (existingFriendship.receiver == user.profile.id && existingFriendship.confirmed == false) {
+                            Friendship.acceptRequest(existingFriendship, (err, newFriendship) => {
+                                if (err) return res.json(Utils.return_error(err));
+                                if (friendship) {
+                                    return res.json({
+                                        err: false,
+                                        warning: false,
+                                        msg: 'Friend request accepted.',
+                                        friendship: newFriendship
+                                    });
+                                } else {
+                                    return res.json({
+                                        err: false,
+                                        warning: true,
+                                        msg: 'Friend request does not exist.'
+                                    });
+                                }
+                            });
+                        // No existing friendship + no acceptable request means user already sent request.
+                        } else {
+                            return res.json({
+                                err: false,
+                                warning: true,
+                                msg: request_already_sent
+                            });
+                        }
                     } else {
                         // Create new Friendship.
                         Friendship.create({
-                            sender: user.id,
-                            receiver: receiver.id
+                            sender: user.profile.id,
+                            receiver: receiver.profile.id
                         }).exec((err, newFriendship) => {
                             if (err) return res.json(Utils.return_error(err));
                             return res.json({
@@ -157,8 +188,8 @@ module.exports = {
         // Destroy Friendship.
         Friendship.destroy({
             or: [
-                {id: friendshipID, sender: user.id},
-                {id: friendshipID, receiver: user.id}
+                {id: friendshipID, sender: user.profile.id},
+                {id: friendshipID, receiver: user.profile.id}
             ]
         }).exec((err, destroyedFriendship) => {
             if (err) return res.json(Utils.return_error(err));
@@ -186,17 +217,14 @@ module.exports = {
         // Parse POST for params.
         var requestID   = req.param('id');
         var user        = req.options.user;
-        Friendship.update(
-            {id: requestID, receiver: user.id, confirmed: false },
-            {confirmed: true}
-        ).exec((err, friendship) => {
+        Friendship.acceptRequest({id: requestID, receiver: user.profile.id}, (err, newFriendship) => {
             if (err) return res.json(Utils.return_error(err));
-            if (friendship) {
+            if (newFriendship) {
                 return res.json({
                     err: false,
                     warning: false,
                     msg: 'Friend request accepted.',
-                    friendship: friendship
+                    friendship: newFriendship
                 });
             } else {
                 return res.json({
