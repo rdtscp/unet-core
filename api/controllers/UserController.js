@@ -35,7 +35,6 @@ module.exports = {
      *
      */
     get: function (req, res) {
-        var authToken   = req.param('token');
         var user        = req.options.user;
         return res.json({
             err: false,
