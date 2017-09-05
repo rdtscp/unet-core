@@ -50,7 +50,7 @@ module.exports = {
         // Look up User.
         User.findOne({
             username: uname
-        }).exec((err, user) => {
+        }).populate("profile").exec((err, user) => {
             if (err) return res.json(Utils.return_error(err));
             if (user) {
                 // Check Password matches database password.
@@ -79,7 +79,6 @@ module.exports = {
                                         user: user
                                     });
                                 } else {
-                                    // Return User.
                                     return res.serverError('Error creating a device.');
                                 }
                             });
