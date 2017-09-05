@@ -45,17 +45,17 @@ module.exports = {
 
   // Called before a User model is created, will hash the password; returns error if hashing fails.
   beforeCreate: function (values, cb) {
-    // Hash password
-    bcrypt.hash(values.password, 10, function(err, hash) {
-      if(err) return cb(err);
-      values.password = hash;
-      cb();
-    });
+      // Hash password
+      bcrypt.hash(values.password, 10, function(err, hash) {
+          if(err) return cb(err);
+          values.password = hash;
+          cb();
+      });
   },
 
   // After a User has been created, create them a Profile.
   afterCreate: function(newlyInsertedRecord, cb) {
-    Profile.create({ username: newlyInsertedRecord.username, owner: newlyInsertedRecord.id }).exec(cb);
+      Profile.create({ username: newlyInsertedRecord.username, owner: newlyInsertedRecord.id }).exec(cb);
   },
   
   // After a User's credentials have been updated, de-auth all their devices.

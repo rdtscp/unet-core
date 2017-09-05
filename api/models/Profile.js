@@ -19,10 +19,15 @@ module.exports = {
 
     owner: {
       model: 'User',
-      unique: true
+      unique: true,
     },
 
-  }
+  },
+
+  // After a Profile has been created, link it to its User.
+  afterCreate: function(newlyInsertedRecord, cb) {
+      User.update(newlyInsertedRecord.owner,{profile: newlyInsertedRecord}).exec(cb);
+  },
 
 };
 
