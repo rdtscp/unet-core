@@ -13,13 +13,13 @@ module.exports = {
 
         // Profile model of User who created this Friendship.
         sender: {
-            model: 'Profile',
+            model: 'User',
             required: true
         },
 
         // Profile model of User who is a member of this Friendship.
         receiver: {
-            model: 'Profile',
+            model: 'User',
             required: true
         },
 
