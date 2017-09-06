@@ -35,12 +35,15 @@ module.exports = {
      *
      */
     get: function (req, res) {
-        var user        = req.options.user;
-        return res.json({
-            err: false,
-            warning: false,
-            message: null,
-            user: user
+        var user = req.options.user;
+        Chat.populateChatNames(user, (err, chats) => {
+            user.chats = chats;
+            return res.json({
+                err: false,
+                warning: false,
+                message: null,
+                user: user
+            });
         });
     },
 
