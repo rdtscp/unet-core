@@ -107,11 +107,6 @@ module.exports.routes = {
 
   // Chat Controller
 
-  'post /unet/chat/get/all': {
-    controller: 'ChatController',
-    action: 'getall'
-  },
-
   'post /unet/chat/create': {
     controller: 'ChatController',
     action: 'create'
