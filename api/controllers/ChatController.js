@@ -7,27 +7,6 @@
 
 module.exports = {
 
-    /* 'post /unet/chat/get/all'
-     * Returns a list of chats that the requester is part of.
-     * 
-     * Returns json:
-     * {
-     *     err: [ true | false ],
-     *     warning: [ true | false ],
-     *     msg: Error, Warning or Success message; E.G. [ 'Failed to retrieve chats.' ],
-     *     chats: [ Array of Chat.js models ]
-     * }
-     */
-    getall: function (req,res) {
-        var authToken     = req.param('token');
-        var user          = req.options.user;
-        Profile.findOne({
-            id: user.profile.id
-        }).populate('chats').exec((err, profile) => {
-            return res.json(profile.chats)
-        });
-    },
-
     /* 'post /unet/chat/get'
      * Returns a chat requested by ID.
      * 
