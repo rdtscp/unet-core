@@ -68,21 +68,7 @@ module.exports = {
      * }
      */
     get: function (req, res) {
-        var friendshipID  = req.param('id');
-        Friendship.findOne({
-            id: friendshipID
-        }).exec((err, friendship) => {
-            if (err) return res.json(Utils.return_error(err));
-            // @TODO This method does not exist.
-            Friendship.getFriend(user, friendship, (out_friendship) => {
-                return res.json({
-                    err: false,
-                    warning: false,
-                    message: null,
-                    friendships: out_friendship
-                });
-            });
-        });
+        // @TODO Implement
     },
     
     /* 'post /unet/friendship/create'
