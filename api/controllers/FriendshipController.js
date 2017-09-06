@@ -73,6 +73,7 @@ module.exports = {
             id: friendshipID
         }).exec((err, friendship) => {
             if (err) return res.json(Utils.return_error(err));
+            // @TODO This method does not exist.
             Friendship.getFriend(user, friendship, (out_friendship) => {
                 return res.json({
                     err: false,
