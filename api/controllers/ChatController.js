@@ -96,7 +96,7 @@ module.exports = {
             var userOne = members[0];
             var userTwo = members[1];
             Chat.chatExists(userOne, userTwo, (exists) => {
-                if (!exist) {
+                if (!exists) {
                     // @TODO Check that requesting user is indeed friends with all members.
                     Chat.create({
                         name: undefined
