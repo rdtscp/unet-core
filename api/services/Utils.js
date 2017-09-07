@@ -20,7 +20,7 @@ module.exports = {
             mm = '0'+mm
         } 
         
-        return (mm + '/' + dd + '/' + yyyy);
+        return (dd + '/' + mm + '/' + yyyy);
     },
 
     return_error: function (err) {
