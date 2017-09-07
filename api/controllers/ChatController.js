@@ -25,17 +25,26 @@ module.exports = {
             id: chatID
         }).populateAll().exec((err, chat) => {
             if (err) return res.json(Utils.return_error(err));
-            if (chat.name == undefined) {
-                if (chat.users[0].id == user.id) {
-                    chat.name = chat.users[1].username;
-                    return res.json({
-                        err: false,
-                        warning: false,
-                        message: null,
-                        chat: chat
-                    });
+            if (chat) {
+                if (chat.name == undefined) {
+                    if (chat.users[0].id == user.id) {
+                        chat.name = chat.users[1].username;
+                        return res.json({
+                            err: false,
+                            warning: false,
+                            message: null,
+                            chat: chat
+                        });
+                    } else {
+                        chat.name = chat.users[0].username;
+                        return res.json({
+                            err: false,
+                            warning: false,
+                            message: null,
+                            chat: chat
+                        });
+                    }
                 } else {
-                    chat.name = chat.users[0].username;
                     return res.json({
                         err: false,
                         warning: false,
@@ -46,9 +55,8 @@ module.exports = {
             } else {
                 return res.json({
                     err: false,
-                    warning: false,
-                    message: null,
-                    chat: chat
+                    warning: true,
+                    message: 'Chat requested does not exist.'
                 });
             }
         });
