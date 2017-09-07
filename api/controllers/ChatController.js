@@ -20,20 +20,35 @@ module.exports = {
      */
     get: function (req, res) {
         var chatID  = req.param('id');
+        var user    = req.options.user;
         Chat.findOne({
             id: chatID
-        }).exec((err, chat) => {
+        }).populateAll().exec((err, chat) => {
             if (err) return res.json(Utils.return_error(err));
-            else {
-                Chat.retrieveMessages(chat.id, chat.num_msgs, (err, messages) => {
-                    if (err) return res.json(Utils.return_error(err));
+            if (chat.name == undefined) {
+                if (chat.users[0].id == user.id) {
+                    chat.name = chat.users[1].username;
                     return res.json({
                         err: false,
                         warning: false,
                         message: null,
-                        chat: chat,
-                        messages: messages
+                        chat: chat
                     });
+                } else {
+                    chat.name = chat.users[0].username;
+                    return res.json({
+                        err: false,
+                        warning: false,
+                        message: null,
+                        chat: chat
+                    });
+                }
+            } else {
+                return res.json({
+                    err: false,
+                    warning: false,
+                    message: null,
+                    chat: chat
                 });
             }
         });
