@@ -33,7 +33,7 @@ module.exports = {
         },
     
         last_sender: {
-            type: 'integer'
+            model: 'User'
         },
     
         last_active: {
