@@ -27,7 +27,8 @@ module.exports = {
         },
 
         timestamp: {
-            type: 'string'
+            type: 'string',
+            defaultsTo: Utils.currDate()
         },
 
         message: {
