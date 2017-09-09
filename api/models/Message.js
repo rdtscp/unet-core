@@ -31,6 +31,11 @@ module.exports = {
             defaultsTo: Utils.currDate()
         },
 
+        username: {
+            type: 'string',
+            required: true
+        },
+
         message: {
             type: 'longtext'
         }

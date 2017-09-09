@@ -23,6 +23,11 @@ module.exports = {
             via: 'chat'
         },
 
+        isGroup: function () {
+            if (users.length > 2) return true;
+            else return false;
+        },
+
         name: {
             type: 'string'
         },

@@ -42,14 +42,16 @@ module.exports = {
         Message.create({
             chat: chatID,
             message: msg,
-            sender: user.id
+            sender: user.id,
+            username: user.username,
         }).exec((err, message) => {
             if (err) return res.json(Utils.return_error(err));
             if (message) {
                 Chat.update(
                     {id: chatID},
-                    {last_msg: msg, last_sender: user.id, last_active: Utils.currDate()}
+                    {last_msg: message.username + ': ' + msg, last_sender: user.id, last_active: Utils.currDate()}
                 ).exec((err, chat) => { if (err) console.log(err); });
+
                 return res.json({
                     err: false,
                     warning: false,
