@@ -23,11 +23,6 @@ module.exports = {
             via: 'chat'
         },
 
-        isGroup: function () {
-            if (users.length > 2) return true;
-            else return false;
-        },
-
         name: {
             type: 'string'
         },
@@ -47,6 +42,7 @@ module.exports = {
         },     
   
     },
+
 
     chatExists(userOne, userTwo, cb) {
         // Get all Chats, and their EserU, where the Chat's name == null.
