@@ -49,9 +49,8 @@ module.exports = {
             if (message) {
                 Chat.update(
                     {id: chatID},
-                    {last_msg: message.username + ': ' + msg, last_sender: user.id, last_active: Utils.currDate()}
+                    {last_msg: msg, last_sender: user.id, last_active: Utils.currDate()}
                 ).exec((err, chat) => { if (err) console.log(err); });
-
                 return res.json({
                     err: false,
                     warning: false,
