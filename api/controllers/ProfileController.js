@@ -21,7 +21,6 @@ module.exports = {
      *
      */
     get: function (req, res) {
-        var authToken   = req.param('token');
         var id          = req.param('id');
         Profile.findOne({
             id: id
