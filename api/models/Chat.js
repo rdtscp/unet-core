@@ -33,7 +33,8 @@ module.exports = {
         },
     
         last_sender: {
-            model: 'User'
+            model: 'User',
+            defaultsTo: null
         },
     
         last_active: {
