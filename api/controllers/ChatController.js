@@ -175,8 +175,8 @@ module.exports = {
      */
     subscribe: function (req, res) {
         // Only allow socket connections here.
-        if (!req.isSocket) {
-            var chatID  = req.param('id');
+        if (req.isSocket) {
+            var chatID  = req.body[1];
             var user    = req.options.user;
             Chat.isMemberOf(user, chatID, (err, member) => {
                 if (err) return res.json(Utils.return_error(err));
