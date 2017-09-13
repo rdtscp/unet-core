@@ -181,7 +181,7 @@ module.exports = {
             Chat.isMemberOf(user, chatID, (err, member) => {
                 if (err) return res.json(Utils.return_error(err));
                 // Subscribe socket to this chat.
-                sails.sockets.join(req, chatID, (err) => { if (err) console.log(err); });
+                if (member) sails.sockets.join(req, chatID, (err) => { if (err) console.log(err); });
             });
         }
     }
