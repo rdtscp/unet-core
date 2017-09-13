@@ -78,11 +78,11 @@ module.exports = {
         Profile.destroy({owner: userID}).exec(cb);
     },
 
-   /* Method takes two users, and returns them (if they exist).
-    *  
-    * sender:   JSON representation of the User that sent a specific request.
-    * receiver: JSON representation of the User that has/is to receive the request
-    */
+    /* Method takes two users, and returns them (if they exist).
+     *  
+     * sender:   JSON representation of the User that sent a specific request.
+     * receiver: JSON representation of the User that has/is to receive the request
+     */
     getUsers: function(sender, receiver, cb) {
         var tasks = [];
         var out_sender;
