@@ -44,7 +44,26 @@ module.exports = {
   
     },
 
+    /* Takes a user and a chatID and returns if that User is a member of that chat. */
+    isMemberOf(user, chatID, cb) {
+        var userChats = user.chats;
+        Chat.findOne({
+            id: chatID
+        }).exec((err, chat) => {
+            function filterByID(chat) {
+                if (chat.id == chatID) return true;
+                else return false;
+            }
+            if (err) cb(err);
+            else {
+                var validChats = userChats.filter(filterByID);
+                if (validChats.length > 0) cb(null, true);
+                else cb(null, false);
+            }
+        });
+    },
 
+    /* Checks if a chat exists between two users. */
     chatExists(userOne, userTwo, cb) {
         // Get all Chats, and their EserU, where the Chat's name == null.
         Chat.find().populate('users', {name: null}).exec((err, chats) => {
