@@ -67,6 +67,7 @@ module.exports.policies = {
     getall: 'sessionAuth',
     get: 'sessionAuth',
     create: 'sessionAuth',
+    subscribe: 'sessionAuth'
   },
 
   MessageController: {
