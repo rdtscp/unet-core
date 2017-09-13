@@ -122,6 +122,11 @@ module.exports.routes = {
     action: 'destroy'
   },
 
+  'post /unet/chat/subscribe': {
+    controller: 'ChatController',
+    action: 'subscribe'
+  },
+
   // Message Controller
 
   'post /unet/message/create': {
