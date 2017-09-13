@@ -21,42 +21,53 @@ module.exports = {
     get: function (req, res) {
         var chatID  = req.param('id');
         var user    = req.options.user;
-        Chat.findOne({
-            id: chatID
-        }).populateAll().exec((err, chat) => {
-            if (err) return res.json(Utils.return_error(err));
-            if (chat) {
-                if (chat.name == undefined) {
-                    if (chat.users[0].id == user.id) {
-                        chat.name = chat.users[1].username;
-                        return res.json({
-                            err: false,
-                            warning: false,
-                            message: null,
-                            chat: chat
-                        });
-                    } else {
-                        chat.name = chat.users[0].username;
-                        return res.json({
-                            err: false,
-                            warning: false,
-                            message: null,
-                            chat: chat
-                        });
-                    }
-                } else {
-                    return res.json({
-                        err: false,
-                        warning: false,
-                        message: null,
-                        chat: chat
-                    });
-                }
-            } else {
+        Chat.isMemberOf(user, chatID, (err, member) => {
+            if (err) return res.json(turn_error(err));
+            else if (!member) {
                 return res.json({
                     err: false,
                     warning: true,
-                    message: 'Chat requested does not exist.'
+                    message: 'You are not permitted to get this chat.'
+                });
+            } else {
+                Chat.findOne({
+                    id: chatID
+                }).populateAll().exec((err, chat) => {
+                    if (err) return res.json(Utils.return_error(err));
+                    if (chat) {
+                        if (chat.name == undefined) {
+                            if (chat.users[0].id == user.id) {
+                                chat.name = chat.users[1].username;
+                                return res.json({
+                                    err: false,
+                                    warning: false,
+                                    message: null,
+                                    chat: chat
+                                });
+                            } else {
+                                chat.name = chat.users[0].username;
+                                return res.json({
+                                    err: false,
+                                    warning: false,
+                                    message: null,
+                                    chat: chat
+                                });
+                            }
+                        } else {
+                            return res.json({
+                                err: false,
+                                warning: false,
+                                message: null,
+                                chat: chat
+                            });
+                        }
+                    } else {
+                        return res.json({
+                            err: false,
+                            warning: true,
+                            message: 'Chat requested does not exist.'
+                        });
+                    }
                 });
             }
         });
@@ -150,6 +161,28 @@ module.exports = {
 
     update: function (req, res) {
         // @TODO Implement
+    },
+
+    /* Socket: 'post /unet/chat/subscribe'
+     * Returns a chat requested by ID.
+     * 
+     * Returns json:
+     * {
+     *     err: [ true | false ],
+     *     warning: [ true | false ],
+     *     msg: Error, Warning or Success message; E.G. [ 'Failed to subscribe to chat.' ]
+     * }
+     */
+    subscribe: function (req, res) {
+        // Only allow socket connections here.
+        if (!req.isSocket) {
+            var chatID  = req.param('id');
+            var user    = req.options.user;
+            Chat.isMemberOf(user, chatID, (err, member) => {
+                if (err) return res.json(Utils.return_error(err));
+                // Subscribe socket to this chat.
+            });
+        }
     }
 	
 };
