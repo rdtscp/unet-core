@@ -39,30 +39,42 @@ module.exports = {
         var msg     = req.param('message');
         msg         = msg.replace(/(<br>|&nbsp;| )*$/, '').replace(/^(<br>|&nbsp;| )*/, '');
         var user    = req.options.user;
-        Message.create({
-            chat: chatID,
-            message: msg,
-            sender: user.id,
-            username: user.username,
-        }).exec((err, message) => {
+        Chat.isMemberOf(user, chatID, (err, member) => {
             if (err) return res.json(Utils.return_error(err));
-            if (message) {
-                Chat.update(
-                    {id: chatID},
-                    {last_msg: msg, last_sender: user.id, last_active: Utils.currDate()}
-                ).exec((err, chat) => { if (err) console.log(err); });
-                return res.json({
-                    err: false,
-                    warning: false,
-                    msg: 'Message sent',
-                    message: message,
-                    user: user.id
-                });
-            } else {
+            else if (!member) {
                 return res.json({
                     err: false,
                     warning: true,
-                    msg: 'Message was not created succesfully.'
+                    msg: 'Not authorised to send a message to provided chat.'
+                });
+            } else {
+                Message.create({
+                    chat: chatID,
+                    message: msg,
+                    sender: user.id,
+                    username: user.username,
+                }).exec((err, newMsg) => {
+                    if (err) return res.json(Utils.return_error(err));
+                    if (newMsg) {
+                        Chat.update(
+                            {id: chatID},
+                            {last_msg: msg, last_sender: user.id, last_active: Utils.currDate()}
+                        ).exec((err, chat) => { if (err) console.log(err); });
+                        sails.sockets.broadcast(chatID, 'newMessage', newMsg);
+                        return res.json({
+                            err: false,
+                            warning: false,
+                            msg: 'Message sent',
+                            message: newMsg,
+                            user: user.id
+                        });
+                    } else {
+                        return res.json({
+                            err: false,
+                            warning: true,
+                            msg: 'Message was not created succesfully.'
+                        });
+                    }
                 });
             }
         });
