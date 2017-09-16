@@ -90,7 +90,15 @@ module.exports = {
         var members       = req.param('members');
         var user          = req.options.user;
 
-        
+        // Validate chat name.
+        var uname_regexp = /^.{3,26}$/
+        if (chatName.search(uname_regexp) == -1) {
+            return res.json({
+                err: false,
+                warning: true,
+                msg: 'Chat name must be between 3 and 26 characters.'
+            });
+        }
 
         // Push current user into chat members.
         members.push(user.id);
