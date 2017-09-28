@@ -67,13 +67,9 @@ module.exports.connections = {
 
   unet: {
       adapter: 'sails-mongo',
-      host: 'localhost',
-      port: 27017,
-      user: 'unet',
-      password: 'mongo-pw',
-      database: 'unet'
+      url: process.env.PROD_MONGODB
   },
-
+  
   /***************************************************************************
   *                                                                          *
   * PostgreSQL is another officially supported relational database.          *
