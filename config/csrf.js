@@ -60,5 +60,5 @@ module.exports.csrf = true;
 
 module.exports.csrf = {
    grantTokenViaAjax: true,
-   origin: 'https://acwilson96.github.io/unet_webapp/build/'
+   origin: 'https://acwilson96.github.io'
 }
