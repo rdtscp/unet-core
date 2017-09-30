@@ -47,7 +47,7 @@ module.exports.cors = {
   *                                                                          *
   ***************************************************************************/
 
-  origin: 'https://acwilson96.github.io, http://localhost',
+  origin: 'https://acwilson96.github.io, http://localhost:3000',
 
   /***************************************************************************
   *                                                                          *
