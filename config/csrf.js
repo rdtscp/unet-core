@@ -60,5 +60,9 @@ module.exports.csrf = true;
 
 module.exports.csrf = {
    grantTokenViaAjax: true,
+<<<<<<< HEAD
    origin: 'https://acwilson96.github.io, http://localhost'
+=======
+   origin: 'https://acwilson96.github.io'
+>>>>>>> f7f3a92b983c40d1b4503eca32e7afb55e395557
 }
