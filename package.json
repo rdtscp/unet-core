@@ -36,5 +36,8 @@
     "url": "https://github.com/acwilson96/unet-core.git"
   },
   "author": "acwilson96",
-  "license": ""
+  "license": "",
+  "devDependencies": {
+    "hoek": "^4.2.1"
+  }
 }
