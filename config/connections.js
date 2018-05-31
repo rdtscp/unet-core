@@ -67,7 +67,7 @@ module.exports.connections = {
 
   unet: {
       adapter: 'sails-mongo',
-      url: process.env.PROD_MONGODB
+      url: process.env.MONGODB_URI
   },
   
   /***************************************************************************
