@@ -47,7 +47,7 @@ module.exports.cors = {
   *                                                                          *
   ***************************************************************************/
 
-  origin: 'https://acwilson96-unet.herokuapp.com/',
+  origin: '*',
 
   /***************************************************************************
   *                                                                          *
@@ -73,6 +73,6 @@ module.exports.cors = {
   *                                                                          *
   ***************************************************************************/
 
-  headers: ['Authorization', 'content-type', 'user-agent']
+  // headers: ['Authorization', 'content-type', 'user-agent']
 
 };
