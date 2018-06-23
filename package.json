@@ -18,7 +18,7 @@
     "grunt-contrib-uglify": "1.0.1",
     "grunt-contrib-watch": "^1.1.0",
     "grunt-sails-linker": "~0.10.1",
-    "grunt-sync": "^0.7.0",
+    "grunt-sync": "^0.8.0",
     "include-all": "^1.0.0",
     "rc": "^1.2.8",
     "sails": "^0.12.14",
