@@ -19,16 +19,19 @@
     "grunt-contrib-watch": "^1.1.0",
     "grunt-sails-linker": "~0.10.1",
     "grunt-sync": "^0.7.0",
-    "include-all": "^1.0.0",
+    "include-all": "^3.0.0",
     "rc": "^1.2.8",
-    "sails": "^0.12.14",
-    "sails-disk": "~0.10.9",
+    "sails": "^1.0.0",
+    "sails-disk": "~1.0.0",
     "sails-mongo": "^0.12.2",
-    "sails-mysql": "^0.11.5"
+    "sails-mysql": "^1.0.0",
+    "snyk": "^1.88.0"
   },
   "scripts": {
     "debug": "node debug app.js",
-    "start": "node app.js"
+    "start": "node app.js",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "main": "app.js",
   "repository": {
@@ -39,5 +42,6 @@
   "license": "",
   "devDependencies": {
     "hoek": "^4.2.1"
-  }
+  },
+  "snyk": true
 }
