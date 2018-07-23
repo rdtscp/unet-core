@@ -78,11 +78,14 @@ module.exports = {
             
         })
         .exec((err, chats) => {
-            sails.log("FINISHED FINDING CHATS, Found: %d Chats", chats.length);
-            if (chats.length > 0)
+            sails.log("Finished Chat.find():");
+            sails.log(err);
+            sails.log(chats);
+            // sails.log("FINISHED FINDING CHATS, Found: %d Chats", chats.length);
+            // if (chats.length > 0)
                 cb(true);
-            else
-                cb(false);
+            // else
+                // cb(false);
 
             // var output = [];
             // chats.forEach((chat) => {
