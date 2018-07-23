@@ -70,23 +70,29 @@ module.exports = {
     chatExists(userOne, userTwo, cb) {
         // Get all Chats, and their EserU, where the Chat's name == null.
         sails.log("chatExists()");
-        Chat.find().populate('users').where({
-            and: [
-                { users: userOne },
-                { users: userTwo }
-              ]
-        })
-        .exec((err, chats) => {
+        Chat.find().populate("users").exec((err, chats) => {
             sails.log("Finished Chat.find():");
             sails.log(err.message);
             sails.log(chats);
-            if (chats === null) {
-                cb(false);
-            }
-            else {
-                cb(true);
-            }
+            cb(false);
         });
+        // Chat.find().populate("users", {
+        //     and: [
+        //         { users: { "contains": userOne } },
+        //         { users: { "contains": userTwo } }
+        //     ]
+        // })
+        // .exec((err, chats) => {
+        //     sails.log("Finished Chat.find():");
+        //     sails.log(err.message);
+        //     sails.log(chats);
+        //     if (chats === null) {
+        //         cb(false);
+        //     }
+        //     else {
+        //         cb(true);
+        //     }
+        // });
     },
 
     // Takes a user, and returns its chats with relative chat names.
