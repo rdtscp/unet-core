@@ -70,22 +70,22 @@ module.exports = {
     chatExists(userOne, userTwo, cb) {
         // Get all Chats, and their EserU, where the Chat's name == null.
         sails.log("chatExists()");
-        Chat.find({
+        Chat.find().where({
             and: [
                 { users: { 'contains' : userOne } },
                 { users: { 'contains' : userTwo } }
               ]
-            
         })
         .exec((err, chats) => {
             sails.log("Finished Chat.find():");
-            sails.log(err);
+            sails.log(err.message);
             sails.log(chats);
-            // sails.log("FINISHED FINDING CHATS, Found: %d Chats", chats.length);
-            // if (chats.length > 0)
+            if (chats === null) {
+                cb(false);
+            }
+            else {
                 cb(true);
-            // else
-                // cb(false);
+            }
 
             // var output = [];
             // chats.forEach((chat) => {
