@@ -1,0 +1,96 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.12.0
+ignore: {}
+# patches apply the minimum changes required to fix a vulnerability
+patch:
+  'npm:debug:20170905':
+    - sails > @sailshq/express > @sailshq/connect > express-session > debug:
+        patched: '2018-07-23T14:16:30.190Z'
+    - sails > grunt-contrib-watch > tiny-lr > body-parser > debug:
+        patched: '2018-07-23T14:16:30.190Z'
+    - sails > @sailshq/express > @sailshq/connect > debug:
+        patched: '2018-07-23T14:16:30.190Z'
+    - sails > @sailshq/express > @sailshq/connect > compression > debug:
+        patched: '2018-07-23T14:16:30.190Z'
+    - sails > @sailshq/express > @sailshq/connect > connect-timeout > debug:
+        patched: '2018-07-23T14:16:30.190Z'
+    - sails > @sailshq/express > @sailshq/connect > @sailshq/body-parser > debug:
+        patched: '2018-07-23T14:16:30.190Z'
+    - sails > @sailshq/express > send > debug:
+        patched: '2018-07-23T14:16:30.190Z'
+    - sails > @sailshq/express > @sailshq/connect > finalhandler > debug:
+        patched: '2018-07-23T14:16:30.190Z'
+    - sails > @sailshq/express > @sailshq/connect > morgan > debug:
+        patched: '2018-07-23T14:16:30.190Z'
+    - sails > @sailshq/express > @sailshq/connect > serve-index > debug:
+        patched: '2018-07-23T14:16:30.190Z'
+    - sails > @sailshq/express > @sailshq/connect > serve-static > send > debug:
+        patched: '2018-07-23T14:16:30.190Z'
+    - sails > sails-hook-sockets > socket.io > socket.io-adapter > socket.io-parser > debug:
+        patched: '2018-07-23T14:16:30.190Z'
+    - sails > @sailshq/express > debug:
+        patched: '2018-07-23T14:16:30.190Z'
+  'npm:lodash:20180130':
+    - sails-mongo > waterline-cursor > lodash:
+        patched: '2018-07-23T14:16:30.190Z'
+    - sails-disk > waterline-criteria > lodash:
+        patched: '2018-07-23T14:16:30.190Z'
+    - sails-disk > waterline-cursor > lodash:
+        patched: '2018-07-23T14:16:30.190Z'
+    - sails > include-all > lodash:
+        patched: '2018-07-23T14:16:30.190Z'
+    - sails > captains-log > lodash:
+        patched: '2018-07-23T14:16:30.190Z'
+    - sails > sails-disk > waterline-criteria > lodash:
+        patched: '2018-07-23T14:16:30.190Z'
+    - sails > sails-disk > waterline-cursor > lodash:
+        patched: '2018-07-23T14:16:30.190Z'
+    - sails > rttc > lodash:
+        patched: '2018-07-23T14:16:30.190Z'
+    - sails > sails-util > lodash:
+        patched: '2018-07-23T14:16:30.190Z'
+  'npm:mime:20170907':
+    - sails > @sailshq/express > send > mime:
+        patched: '2018-07-23T14:16:30.190Z'
+    - sails > @sailshq/express > @sailshq/connect > serve-static > send > mime:
+        patched: '2018-07-23T14:16:30.190Z'
+  'npm:ms:20170412':
+    - sails > grunt-contrib-watch > tiny-lr > body-parser > debug > ms:
+        patched: '2018-07-23T14:16:30.190Z'
+    - sails > @sailshq/express > debug > ms:
+        patched: '2018-07-23T14:16:30.190Z'
+    - sails > @sailshq/express > send > ms:
+        patched: '2018-07-23T14:16:30.190Z'
+    - sails > @sailshq/express > send > debug > ms:
+        patched: '2018-07-23T14:16:30.190Z'
+    - sails > @sailshq/express > @sailshq/connect > debug > ms:
+        patched: '2018-07-23T14:16:30.190Z'
+    - sails > @sailshq/express > @sailshq/connect > compression > debug > ms:
+        patched: '2018-07-23T14:16:30.190Z'
+    - sails > @sailshq/express > @sailshq/connect > connect-timeout > ms:
+        patched: '2018-07-23T14:16:30.190Z'
+    - sails > @sailshq/express > @sailshq/connect > connect-timeout > debug > ms:
+        patched: '2018-07-23T14:16:30.190Z'
+    - sails > @sailshq/express > @sailshq/connect > @sailshq/body-parser > debug > ms:
+        patched: '2018-07-23T14:16:30.190Z'
+    - sails > @sailshq/express > @sailshq/connect > express-session > debug > ms:
+        patched: '2018-07-23T14:16:30.190Z'
+    - sails > @sailshq/express > @sailshq/connect > finalhandler > debug > ms:
+        patched: '2018-07-23T14:16:30.190Z'
+    - sails > @sailshq/express > @sailshq/connect > morgan > debug > ms:
+        patched: '2018-07-23T14:16:30.190Z'
+    - sails > @sailshq/express > @sailshq/connect > serve-index > debug > ms:
+        patched: '2018-07-23T14:16:30.190Z'
+    - sails > @sailshq/express > @sailshq/connect > serve-static > send > ms:
+        patched: '2018-07-23T14:16:30.190Z'
+    - sails > @sailshq/express > @sailshq/connect > serve-static > send > debug > ms:
+        patched: '2018-07-23T14:16:30.190Z'
+    - sails > sails-hook-sockets > socket.io > socket.io-adapter > socket.io-parser > debug > ms:
+        patched: '2018-07-23T14:16:30.190Z'
+    - sails > @sailshq/express > @sailshq/connect > serve-favicon > ms:
+        patched: '2018-07-23T14:16:30.190Z'
+  'npm:negotiator:20160616':
+    - sails > @sailshq/express > @sailshq/connect > compression > accepts > negotiator:
+        patched: '2018-07-23T14:16:30.190Z'
+    - sails > @sailshq/express > @sailshq/connect > serve-index > accepts > negotiator:
+        patched: '2018-07-23T14:16:30.190Z'
