@@ -75,26 +75,11 @@ module.exports = {
             sails.log("---CHATS---");
             sails.log(chats);
             sails.log("-----------");
-
-            // cb(false);
+            if (chats.length > 0)
+                cb(true);
+            else   
+                cb(false);
         });
-        // Chat.find().populate("users", {
-        //     and: [
-        //         { users: { "contains": userOne } },
-        //         { users: { "contains": userTwo } }
-        //     ]
-        // })
-        // .exec((err, chats) => {
-        //     sails.log("Finished Chat.find():");
-        //     sails.log(err.message);
-        //     sails.log(chats);
-        //     if (chats === null) {
-        //         cb(false);
-        //     }
-        //     else {
-        //         cb(true);
-        //     }
-        // });
     },
 
     // Takes a user, and returns its chats with relative chat names.
