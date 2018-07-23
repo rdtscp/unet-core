@@ -174,7 +174,9 @@ module.exports = {
                 User.update(
                     {id: user.id},
                     {password: hash}
-                ).exec((err) => {
+                )
+                .fetch()
+                .exec((err) => {
                     if (err) return res.json(Utils.return_error(err));
                     else return res.json({
                         err: false,

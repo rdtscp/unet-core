@@ -59,7 +59,9 @@ module.exports = {
                         Chat.update(
                             {id: chatID},
                             {last_msg: msg, last_sender: user.id, last_active: Utils.currDate()}
-                        ).exec((err, chat) => { if (err) console.log(err); });
+                        )
+                        .fetch()
+                        .exec((err, chat) => { if (err) console.log(err); });
                         sails.sockets.broadcast(chatID, 'newMessage', newMsg);
                         return res.json({
                             err: false,

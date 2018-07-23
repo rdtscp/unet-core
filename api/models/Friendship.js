@@ -40,7 +40,9 @@ module.exports = {
         Friendship.update(
             request,
             {confirmed: true}
-        ).exec((err, newFriendship) => {
+        )
+        .fetch()
+        .exec((err, newFriendship) => {
             if (err) cb(err, null);
             else cb(null, newFriendship);
         });
