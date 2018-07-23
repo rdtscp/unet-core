@@ -35,7 +35,7 @@ module.exports = {
                 }).populateAll().exec((err, chat) => {
                     if (err) return res.json(Utils.return_error(err));
                     if (chat) {
-                        if (chat.name == undefined) {
+                        if (chat.name == "") {
                             if (chat.users[0].id == user.id) {
                                 chat.name = chat.users[1].username;
                                 return res.json({
@@ -135,7 +135,7 @@ module.exports = {
                 else {
                     // @TODO Check that requesting user is indeed friends with all members.
                     Chat.create({
-                        name: undefined,
+                        name: "",
                         users: members
                     })
                     .fetch()

@@ -97,7 +97,7 @@ module.exports = {
                 Chat.findOne({
                     id: user.chats[i].id
                 }).populate('users').then((currChat) => {
-                    if (currChat.name == undefined) {
+                    if (currChat.name == "") {
                         if (currChat.users[0].id == user.id) {
                             currChat.name = currChat.users[1].username;
                         } else {
