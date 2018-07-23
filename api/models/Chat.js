@@ -72,6 +72,7 @@ module.exports = {
         sails.log("chatExists()");
         Chat.find().populate('users', {name: null}).exec((err, chats) => {
             sails.log("FINISHED FINDING CHATS");
+
             var output = [];
             chats.forEach((chat) => {
                 var user_one = chat.users[0].id;
@@ -89,9 +90,20 @@ module.exports = {
                     output.push(false);
                 }
             });
-            var exists = output.indexOf(true);
-            if (exists > -1) cb(true);
-            else cb(false);
+            while (true) {
+                // If all Chats have been checked.
+                if (output.length >= chats.length) {
+                    var exists = output.indexOf(true);
+                    if (exists > -1) {
+                        cb(true);
+                        break;
+                    }
+                    else {
+                        cb(false);
+                        break;
+                    }
+                }
+            }
         });
     },
 
