@@ -70,40 +70,49 @@ module.exports = {
     chatExists(userOne, userTwo, cb) {
         // Get all Chats, and their EserU, where the Chat's name == null.
         sails.log("chatExists()");
-        Chat.find().populate('users', {name: null}).exec((err, chats) => {
-            sails.log("FINISHED FINDING CHATS");
-
-            var output = [];
-            chats.forEach((chat) => {
-                var user_one = chat.users[0].id;
-                var user_two = chat.users[1].id;
-                if ((user_one == userOne) && (user_two == userTwo)) {
-                    // Push true to indicate this chat is the same as the one between userOne and userTwo.
-                    output.push(true);
-                }
-                else if ((user_two == userOne) && (user_one == userTwo)) {
-                    // Push true to indicate this chat is the same as the one between userOne and userTwo.
-                    output.push(true);
-                }
-                else {
-                    // Push true to indicate this chat is NOT the same as the one between userOne and userTwo.
-                    output.push(false);
-                }
-            });
-            while (true) {
-                // If all Chats have been checked.
-                if (output.length >= chats.length) {
-                    var exists = output.indexOf(true);
-                    if (exists > -1) {
-                        cb(true);
-                        break;
-                    }
-                    else {
-                        cb(false);
-                        break;
-                    }
-                }
+        Chat.find({
+            users: {
+                'contains' : [ userOne, userTwo ]
             }
+        })
+        .exec((err, chats) => {
+            sails.log("FINISHED FINDING CHATS, Found: %d Chats", chats.length);
+            if (chats.length > 0)
+                cb(true);
+            else
+                cb(false);
+
+            // var output = [];
+            // chats.forEach((chat) => {
+            //     var user_one = chat.users[0].id;
+            //     var user_two = chat.users[1].id;
+            //     if ((user_one == userOne) && (user_two == userTwo)) {
+            //         // Push true to indicate this chat is the same as the one between userOne and userTwo.
+            //         output.push(true);
+            //     }
+            //     else if ((user_two == userOne) && (user_one == userTwo)) {
+            //         // Push true to indicate this chat is the same as the one between userOne and userTwo.
+            //         output.push(true);
+            //     }
+            //     else {
+            //         // Push true to indicate this chat is NOT the same as the one between userOne and userTwo.
+            //         output.push(false);
+            //     }
+            // });
+            // while (true) {
+            //     // If all Chats have been checked.
+            //     if (output.length >= chats.length) {
+            //         var exists = output.indexOf(true);
+            //         if (exists > -1) {
+            //             cb(true);
+            //             break;
+            //         }
+            //         else {
+            //             cb(false);
+            //             break;
+            //         }
+            //     }
+            // }
         });
     },
 
