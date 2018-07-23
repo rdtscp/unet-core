@@ -35,4 +35,8 @@ module.exports = {
   //   level: "silent"
   // }
 
+  sockets: {
+    onlyAllowOrigins: [ 'https://acwilson96.github.io', 'https://acwilson96-unet.herokuapp.com' ],
+  }
+
 };
