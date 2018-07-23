@@ -123,34 +123,32 @@ module.exports = {
             var userOne = members[0];
             var userTwo = members[1];
             sails.log("Checking if Chat Exists");
-            Chat.chatExists(userOne, userTwo, (exists) => {
-                sails.log("Chat Exists: " + exists);
-                if (exists) {
+            if (Chat.chatExists(userOne, userTwo)) {
+                return res.json({
+                    err: false,
+                    warning: true,
+                    msg: 'You already have a private chat with this user.'
+                });
+            } else {
+                // @TODO Check that requesting user is indeed friends with all members.
+                Chat.create({
+                    name: undefined,
+                    users: members
+                })
+                .fetch()
+                .exec((err, newChat) => {
+                    if (err) return res.json(Utils.return_error(err));
+                    // Add members to chat.
+                    // newChat.users.addToCollection(members);
+                    // newChat.replaceCollection((err) => {if (err) sails.log(err)});
                     return res.json({
                         err: false,
-                        warning: true,
-                        msg: 'You already have a private chat with this user.'
+                        warning: false,
+                        msg: 'Created new chat',
+                        chat: newChat
                     });
-                } else {
-                    // @TODO Check that requesting user is indeed friends with all members.
-                    Chat.create({
-                        name: undefined
-                    })
-                    .fetch()
-                    .exec((err, newChat) => {
-                        if (err) return res.json(Utils.return_error(err));
-                        // Add members to chat.
-                        newChat.users.addToCollection(members);
-                        newChat.replaceCollection((err) => {if (err) sails.log(err)});
-                        return res.json({
-                            err: false,
-                            warning: false,
-                            msg: 'Created new chat',
-                            chat: newChat
-                        });
-                    });
-                }
-            })
+                });
+            }
             
         }
         // Else its a group chat, so make one.

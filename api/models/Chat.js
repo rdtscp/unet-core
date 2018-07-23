@@ -67,19 +67,25 @@ module.exports = {
     },
 
     /* Checks if a chat exists between two users. */
-    chatExists(userOne, userTwo, cb) {
+    chatExists(userOne, userTwo) {
         // Get all Chats, and their EserU, where the Chat's name == null.
-        sails.log("chatExists()");
-        Chat.find().populate("users").exec((err, chats) => {
-            sails.log("Finished Chat.find():");
-            sails.log("---CHATS---");
-            sails.log(chats);
-            sails.log("-----------");
-            if (chats.length > 0)
-                cb(true);
-            else   
-                cb(false);
+        sails.log("Checking if ChatExists between: %d and %d", userOne, userTwo);
+        return new Promise((resolve, reject) => {
+            Chat.find().populate("users").exec((err, chats) => {
+                sails.log("Finished Chat.find():");
+                sails.log("---CHATS---");
+                sails.log(chats);
+                sails.log("-----------");
+                if (chats == null)
+                    reject(false);
+                if (chats.length > 0)
+                    resolve(true);
+                else   
+                    resolve(false);
+            });
         });
+        
+        
     },
 
     // Takes a user, and returns its chats with relative chat names.
