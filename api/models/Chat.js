@@ -72,9 +72,11 @@ module.exports = {
         sails.log("chatExists()");
         Chat.find().populate("users").exec((err, chats) => {
             sails.log("Finished Chat.find():");
-            sails.log(err.message);
+            sails.log("---CHATS---");
             sails.log(chats);
-            cb(false);
+            sails.log("-----------");
+
+            // cb(false);
         });
         // Chat.find().populate("users", {
         //     and: [
