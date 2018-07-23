@@ -69,7 +69,9 @@ module.exports = {
     /* Checks if a chat exists between two users. */
     chatExists(userOne, userTwo, cb) {
         // Get all Chats, and their EserU, where the Chat's name == null.
+        sails.log("chatExists()");
         Chat.find().populate('users', {name: null}).exec((err, chats) => {
+            sails.log("FINISHED FINDING CHATS");
             var output = [];
             chats.forEach((chat) => {
                 var user_one = chat.users[0].id;
