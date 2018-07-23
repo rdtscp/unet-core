@@ -102,8 +102,12 @@ module.exports = {
             });
         }
 
+        console.log("Chat Name is Valid: " + chatName);
+
         // Push current user into chat members.
         members.push(user.id);
+
+        console.log("Chat Has " + members.length + " Members");
 
         // Validate input.
         if (members.length < 2) {
