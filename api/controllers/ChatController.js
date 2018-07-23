@@ -90,7 +90,7 @@ module.exports = {
         var members       = req.param('members');
         var user          = req.options.user;
 
-        console.log("Trying to Create Chat: " + chatName);
+        sails.log("Trying to Create Chat: " + chatName);
 
         // Validate chat name.
         var uname_regexp = /^.{3,26}$/
@@ -102,12 +102,12 @@ module.exports = {
             });
         }
 
-        console.log("Chat Name is Valid: " + chatName);
+        sails.log("Chat Name is Valid: " + chatName);
 
         // Push current user into chat members.
         members.push(user.id);
 
-        console.log("Chat Has " + members.length + " Members");
+        sails.log("Chat Has " + members.length + " Members");
 
         // Validate input.
         if (members.length < 2) {
@@ -122,9 +122,9 @@ module.exports = {
             // See if a chat exists between these two users already.
             var userOne = members[0];
             var userTwo = members[1];
-            console.log("Checking if Chat Exists");
+            sails.log("Checking if Chat Exists");
             Chat.chatExists(userOne, userTwo, (exists) => {
-                console.log("Chat Exists: " + exists);
+                sails.log("Chat Exists: " + exists);
                 if (!exists) {
                     // @TODO Check that requesting user is indeed friends with all members.
                     Chat.create({
@@ -135,7 +135,7 @@ module.exports = {
                         if (err) return res.json(Utils.return_error(err));
                         // Add members to chat.
                         newChat.users.addToCollection(members);
-                        newChat.replaceCollection((err) => {if (err) console.log(err)});
+                        newChat.replaceCollection((err) => {if (err) sails.log(err)});
                         return res.json({
                             err: false,
                             warning: false,
