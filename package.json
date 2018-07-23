@@ -24,11 +24,14 @@
     "sails": "^1.0.2",
     "sails-disk": "~1.0.1",
     "sails-mongo": "^1.0.1",
-    "sails-mysql": "^1.0.0"
+    "sails-mysql": "^1.0.0",
+    "snyk": "^1.89.0"
   },
   "scripts": {
     "debug": "node debug app.js",
-    "start": "node app.js"
+    "start": "node app.js",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "main": "app.js",
   "repository": {
@@ -39,5 +42,6 @@
   "license": "",
   "devDependencies": {
     "hoek": "^5.0.3"
-  }
+  },
+  "snyk": true
 }
