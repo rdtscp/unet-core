@@ -7,9 +7,13 @@
 
 module.exports = {
   
-    connection: 'unet',
+    datastore: 'unet',
     identity: 'Chat',
     attributes: {
+
+        createdAt: { type: 'number', autoCreatedAt: true, },
+        updatedAt: { type: 'number', autoUpdatedAt: true, },
+        id: { type: 'string', columnName: '_id', autoIncrement: true},
 
         // List of Profiles in this chat.
         users: {
@@ -34,7 +38,6 @@ module.exports = {
     
         last_sender: {
             model: 'User',
-            defaultsTo: null
         },
     
         last_active: {

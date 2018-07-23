@@ -7,9 +7,13 @@
 
 module.exports = {
 
-    connection: 'unet',
+    datastore: 'unet',
     identity: 'Message',
     attributes: {
+
+        createdAt: { type: 'number', autoCreatedAt: true, },
+        updatedAt: { type: 'number', autoUpdatedAt: true, },
+        id: { type: 'string', columnName: '_id', autoIncrement: true},
 
         // The Chat model this Message belongs to.
         chat: {
@@ -23,7 +27,7 @@ module.exports = {
 
         // Populted using lifecycle callbacks.
         message_num: {
-            type: 'integer'
+            type: 'number'
         },
 
         timestamp: {
@@ -37,7 +41,7 @@ module.exports = {
         },
 
         message: {
-            type: 'longtext'
+            type: 'string'
         }
 
     },
