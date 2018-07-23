@@ -90,6 +90,8 @@ module.exports = {
         var members       = req.param('members');
         var user          = req.options.user;
 
+        console.log("Trying to Create Chat: " + chatName);
+
         // Validate chat name.
         var uname_regexp = /^.{3,26}$/
         if (chatName.search(uname_regexp) == -1) {
