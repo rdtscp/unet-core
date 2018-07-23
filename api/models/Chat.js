@@ -72,8 +72,8 @@ module.exports = {
         sails.log("chatExists()");
         Chat.find().where({
             and: [
-                { users: { 'contains' : userOne } },
-                { users: { 'contains' : userTwo } }
+                { users: userOne },
+                { users: userTwo }
               ]
         })
         .exec((err, chats) => {
