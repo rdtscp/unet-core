@@ -116,6 +116,7 @@ module.exports = {
             // See if a chat exists between these two users already.
             var userOne = members[0];
             var userTwo = members[1];
+            console.log("Checking if Chat Exists");
             Chat.chatExists(userOne, userTwo, (exists) => {
                 console.log("Chat Exists: " + exists);
                 if (!exists) {
