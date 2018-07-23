@@ -22,7 +22,7 @@ module.exports = {
         var chatID  = req.param('id');
         var user    = req.options.user;
         Chat.isMemberOf(user, chatID, (err, member) => {
-            if (err) return res.json(turn_error(err));
+            if (err) return res.json(Utils.return_error(err));
             else if (!member) {
                 return res.json({
                     err: false,
