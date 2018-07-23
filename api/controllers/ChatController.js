@@ -125,7 +125,13 @@ module.exports = {
             sails.log("Checking if Chat Exists");
             Chat.chatExists(userOne, userTwo, (exists) => {
                 sails.log("Chat Exists: " + exists);
-                if (!exists) {
+                if (exists) {
+                    return res.json({
+                        err: false,
+                        warning: true,
+                        msg: 'You already have a private chat with this user.'
+                    });
+                } else {
                     // @TODO Check that requesting user is indeed friends with all members.
                     Chat.create({
                         name: undefined
@@ -142,12 +148,6 @@ module.exports = {
                             msg: 'Created new chat',
                             chat: newChat
                         });
-                    });
-                } else {
-                    return res.json({
-                        err: false,
-                        warning: true,
-                        msg: 'You already have a private chat with this user.'
                     });
                 }
             })
