@@ -36,8 +36,8 @@ module.exports = {
      */
     get: function (req, res) {
         var user = req.options.user;
-        sails.log("Requesting User:");
-        sails.log(user);
+        // sails.log("Requesting User:");
+        // sails.log(user);
         Chat.populateChatNames(user, (err, chats) => {
             user.chats = chats;
             return res.json({
