@@ -142,7 +142,9 @@ module.exports = {
                         Friendship.create({
                             sender: user.id,
                             receiver: receiver.id
-                        }).fetch().exec((err, newFriendship) => {
+                        })
+                        .fetch()
+                        .exec((err, newFriendship) => {
                             if (err) return res.json(Utils.return_error(err));
                             return res.json({
                                 err: false,
@@ -185,7 +187,9 @@ module.exports = {
                 {id: friendshipID, sender: user.id},
                 {id: friendshipID, receiver: user.id}
             ]
-        }).exec((err, destroyedFriendship) => {
+        })
+        .fetch()
+        .exec((err, destroyedFriendship) => {
             if (err) return res.json(Utils.return_error(err));
             return res.json({
                 err: false,

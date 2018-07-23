@@ -99,7 +99,9 @@ module.exports = {
                 User.create({
                     username: uname,
                     password: pword
-                }).fetch().exec((err, user) => {
+                })
+                .fetch()
+                .exec((err, user) => {
                     // Error: return error.
                     if (err) return res.json(Utils.return_error(err));
                     return res.json({
@@ -132,7 +134,9 @@ module.exports = {
         // Remove the User model from the table. User model will delete its dependent children.
         User.destroy({
             id: user.id
-        }).exec((err) => {
+        })
+        .fetch()
+        .exec((err) => {
             if (err) return res.json(Utils.return_error(err));
             else return res.json({
                 err: false,
