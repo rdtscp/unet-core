@@ -70,7 +70,7 @@ module.exports = {
                             ip: req.ip,
                             user_agent: req.headers['user-agent'],
                             token: 'replaced'
-                        }).exec((err, newDevice) => {
+                        }).fetch().exec((err, newDevice) => {
                             if (err) return res.json(Utils.return_error(err));
                             if (newDevice) {
                                 return res.json({

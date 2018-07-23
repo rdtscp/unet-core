@@ -121,11 +121,11 @@ module.exports = {
                     // @TODO Check that requesting user is indeed friends with all members.
                     Chat.create({
                         name: undefined
-                    }).exec((err, newChat) => {
+                    }).fetch().exec((err, newChat) => {
                         if (err) return res.json(Utils.return_error(err));
                         // Add members to chat.
-                        newChat.users.add(members);
-                        newChat.save((err) => {if (err) console.log(err)});
+                        newChat.users.addToCollection(members);
+                        newChat.replaceCollection((err) => {if (err) console.log(err)});
                         return res.json({
                             err: false,
                             warning: false,
@@ -148,11 +148,11 @@ module.exports = {
             // @TODO Check that requesting user is indeed friends with all members.
             Chat.create({
                 name: chatName
-            }).exec((err, newChat) => {
+            }).fetch().exec((err, newChat) => {
                 if (err) return res.json(Utils.return_error(err));
                 // Add members to chat.
-                newChat.users.add(members);
-                newChat.save((err) => {if (err) console.log(err)});
+                newChat.users.addToCollection(members);
+                newChat.replaceCollection((err) => {if (err) console.log(err)});
                 return res.json({
                     err: false,
                     warning: false,

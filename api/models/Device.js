@@ -9,9 +9,13 @@
 
 module.exports = {
     
-    connection: 'unet',
+    datastore: 'unet',
     identity: 'Device',
     attributes: {
+
+        createdAt: { type: 'number', autoCreatedAt: true, },
+        updatedAt: { type: 'number', autoUpdatedAt: true, },
+        id: { type: 'string', columnName: '_id', autoIncrement: true},
 
         // User model that this Device is authenticated for.
         owner: {
@@ -19,7 +23,7 @@ module.exports = {
         },
 
         token: {
-            type: 'longtext',
+            type: 'string',
             required: true
         },
 

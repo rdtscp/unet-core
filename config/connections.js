@@ -19,7 +19,7 @@
  * http://sailsjs.org/#!/documentation/reference/sails.config/sails.config.connections.html
  */
 
-module.exports.connections = {
+module.exports.datastores = {
 
   /***************************************************************************
   *                                                                          *
@@ -28,9 +28,9 @@ module.exports.connections = {
   * Installed by default.                                                    *
   *                                                                          *
   ***************************************************************************/
-  localDiskDb: {
-    adapter: 'sails-disk'
-  },
+  // unet: {
+  //   adapter: 'sails-disk'
+  // },
 
   /***************************************************************************
   *                                                                          *
@@ -67,7 +67,7 @@ module.exports.connections = {
 
   unet: {
       adapter: 'sails-mongo',
-      url: process.env.MONGODB_URI
+      url: process.env.MONGODB_URI 
   },
   
   /***************************************************************************

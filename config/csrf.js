@@ -58,7 +58,3 @@ module.exports.csrf = true;
 *                                                                           *
 ****************************************************************************/
 
-module.exports.csrf = {
-   grantTokenViaAjax: true,
-   origin: 'https://acwilson96.github.io, https://acwilson96-unet.herokuapp.com'
-}

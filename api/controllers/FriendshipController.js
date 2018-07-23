@@ -142,7 +142,7 @@ module.exports = {
                         Friendship.create({
                             sender: user.id,
                             receiver: receiver.id
-                        }).exec((err, newFriendship) => {
+                        }).fetch().exec((err, newFriendship) => {
                             if (err) return res.json(Utils.return_error(err));
                             return res.json({
                                 err: false,

@@ -9,9 +9,13 @@ const bcrypt = require('bcrypt');
 
 module.exports = {
 
-    connection: 'unet',
+    datastore: 'unet',
     identity: 'User',
     attributes: {
+
+        createdAt: { type: 'number', autoCreatedAt: true, },
+        updatedAt: { type: 'number', autoUpdatedAt: true, },
+        id: { type: 'string', columnName: '_id', autoIncrement: true},
 
         // A list of Devices this User is authenticated on.
         devices: {
@@ -28,7 +32,7 @@ module.exports = {
         // The single Profile that this User owns.
         profile: {
             model: 'Profile',
-            unique: true
+            // unique: true
         },
 
         username: {
@@ -40,14 +44,13 @@ module.exports = {
         password: {
             type: 'string',
             required: true,
-        },
-
-        toJSON: function () {
-            let obj = this.toObject();
-            delete obj.password;
-            return obj;
         }
 
+    },
+
+    customToJSON: function() {
+        // Return a shallow copy of this record with the password and ssn removed.
+        return _.omit(this, ['password'])
     },
 
     // Called before a User model is created, will hash the password; returns error if hashing fails.
@@ -62,7 +65,7 @@ module.exports = {
 
     // After a User has been created, create them a Profile.
     afterCreate: (newlyInsertedRecord, cb) => {
-        Profile.create({ username: newlyInsertedRecord.username, owner: newlyInsertedRecord.id }).exec(cb);
+        Profile.create({ username: newlyInsertedRecord.username, owner: newlyInsertedRecord.id }).fetch().exec(cb);
     },
     
     // After a User's credentials have been updated, de-auth all their devices.

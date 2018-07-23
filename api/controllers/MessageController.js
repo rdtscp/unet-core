@@ -53,7 +53,7 @@ module.exports = {
                     message: msg,
                     sender: user.id,
                     username: user.username,
-                }).exec((err, newMsg) => {
+                }).fetch().exec((err, newMsg) => {
                     if (err) return res.json(Utils.return_error(err));
                     if (newMsg) {
                         Chat.update(

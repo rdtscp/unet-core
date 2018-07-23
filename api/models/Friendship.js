@@ -7,9 +7,13 @@
 
 module.exports = {
 
-    connection: 'unet',
+    datastore: 'unet',
     identity: 'Friendship',
     attributes: {
+
+        createdAt: { type: 'number', autoCreatedAt: true, },
+        updatedAt: { type: 'number', autoUpdatedAt: true, },
+        id: { type: 'string', columnName: '_id', autoIncrement: true},
 
         // Profile model of User who created this Friendship.
         sender: {
@@ -26,7 +30,7 @@ module.exports = {
         confirmed: {
             type: 'boolean',
             defaultsTo: false,
-            required: true
+            // required: true
         },
 
     },

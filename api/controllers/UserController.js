@@ -99,7 +99,7 @@ module.exports = {
                 User.create({
                     username: uname,
                     password: pword
-                }).exec((err, user) => {
+                }).fetch().exec((err, user) => {
                     // Error: return error.
                     if (err) return res.json(Utils.return_error(err));
                     return res.json({

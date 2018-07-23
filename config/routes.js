@@ -32,7 +32,12 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
-  
+ 'GET /csrfToken': {
+   action: 'security/grant-csrf-token',
+   cors: {
+     allowOrigins: ['https://acwilson96.github.io', 'https://acwilson96-unet.herokuapp.com' ]
+   }
+ },
 
   /***************************************************************************
   *                                                                          *
