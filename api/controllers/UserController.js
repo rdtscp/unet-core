@@ -5,7 +5,6 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
- const crypto = require('crypto');
  const bcrypt = require('bcrypt');
 
  // create messages.
