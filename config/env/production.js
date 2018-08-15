@@ -36,7 +36,7 @@ module.exports = {
   // }
 
   sockets: {
-    onlyAllowOrigins: [ 'http://acwilson96-unet.herokuapp.com', 'https://acwilson96-unet.herokuapp.com' ],
+    onlyAllowOrigins: [ 'https://acwilson96-unet.herokuapp.com' ],
   }
 
 };
