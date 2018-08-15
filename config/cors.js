@@ -47,7 +47,7 @@ module.exports.cors = {
   *                                                                          *
   ***************************************************************************/
 
-  allowOrigins: [ 'https://acwilson96-unet.herokuapp.com' ],
+  allowOrigins: [ 'http://acwilson96-unet.herokuapp.com', 'https://acwilson96-unet.herokuapp.com' ],
 
   /***************************************************************************
   *                                                                          *
