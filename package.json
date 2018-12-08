@@ -29,11 +29,14 @@
     "sails-hook-orm": "^2.0.1",
     "sails-hook-sockets": "^1.5.3",
     "sails-mongo": "^1.0.1",
-    "sails-mysql": "^0.11.5"
+    "sails-mysql": "^0.11.5",
+    "snyk": "^1.116.2"
   },
   "scripts": {
     "debug": "node debug app.js",
-    "start": "node app.js"
+    "start": "node app.js",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "main": "app.js",
   "repository": {
@@ -44,5 +47,6 @@
   "license": "",
   "devDependencies": {
     "hoek": "^4.2.1"
-  }
+  },
+  "snyk": true
 }

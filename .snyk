@@ -1,0 +1,36 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.13.1
+ignore: {}
+# patches apply the minimum changes required to fix a vulnerability
+patch:
+  'npm:lodash:20180130':
+    - sails-disk > machinepack-fs > machinepack-util > machine > rttc > lodash:
+        patched: '2018-12-08T05:41:51.611Z'
+    - sails > skipper > lodash:
+        patched: '2018-12-08T05:41:51.611Z'
+    - sails-disk > machinepack-fs > machine > rttc > lodash:
+        patched: '2018-12-08T05:41:51.611Z'
+    - sails > machinepack-process > machine > rttc > lodash:
+        patched: '2018-12-08T05:41:51.611Z'
+    - sails-hook-orm > sails-disk > machinepack-fs > rttc > lodash:
+        patched: '2018-12-08T05:41:51.611Z'
+    - sails-hook-orm > sails-disk > machinepack-fs > machine > rttc > lodash:
+        patched: '2018-12-08T05:41:51.611Z'
+    - sails > machinepack-process > machinepack-json > machine > rttc > lodash:
+        patched: '2018-12-08T05:41:51.611Z'
+    - sails-disk > machinepack-fs > rttc > lodash:
+        patched: '2018-12-08T05:41:51.611Z'
+    - sails-disk > machinepack-fs > machinepack-json > machine > rttc > lodash:
+        patched: '2018-12-08T05:41:51.611Z'
+    - sails-disk > machinepack-fs > machinepack-strings > machine > rttc > lodash:
+        patched: '2018-12-08T05:41:51.611Z'
+    - sails > sails-generate > machinepack-process > machine > rttc > lodash:
+        patched: '2018-12-08T05:41:51.611Z'
+    - sails-hook-orm > sails-disk > machinepack-fs > machinepack-json > machine > rttc > lodash:
+        patched: '2018-12-08T05:41:51.611Z'
+    - sails-hook-orm > sails-disk > machinepack-fs > machinepack-strings > machine > rttc > lodash:
+        patched: '2018-12-08T05:41:51.611Z'
+    - sails-hook-orm > sails-disk > machinepack-fs > machinepack-util > machine > rttc > lodash:
+        patched: '2018-12-08T05:41:51.611Z'
+    - sails > sails-generate > machinepack-process > machinepack-json > machine > rttc > lodash:
+        patched: '2018-12-08T05:41:51.611Z'
